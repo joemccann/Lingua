@@ -1,0 +1,155 @@
+* {
+	margin:0;
+	padding:0;
+}
+
+body {
+	background: #000;
+	color: #999;
+	font-family: "Helevetica Neue", Helvetica, "Trebuchet MS", "Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
+	font-size: 62.5%;
+	height: 100%;
+	width: 100%;
+	margin:0 auto;
+}
+
+
+/* Type */	
+pre {
+	border-bottom: solid 1px #ccc;
+	font: normal 1em/1em Courier;
+	color: #fff;
+	padding: 5px 0;
+	margin: 0;
+}
+
+a {
+	color: #ff0;
+	text-decoration: none;
+}
+
+p {
+	font-size: 1.8em;
+}
+
+label, input {
+	font-size: 2em;
+	display: block;
+}
+
+label{
+	font-style: italic;
+	color:#999;
+	padding-bottom: 5px;
+	font-size: 3em;
+}
+
+input[type=button], button{
+	margin:0 auto;
+	padding: 5px;
+	width:98%;
+}
+
+input[type=text], select, textarea{
+	background-color: #ddd;
+	color:#000;
+	margin:0 auto;
+	padding: 5px;
+	width:99%;
+	-webkit-border-radius: 4px;
+	font-size:1.8em;
+}
+
+textarea{
+	width:98%;
+}
+
+select{
+	line-height:20px;
+}
+
+li{
+	list-style-type: none;
+	padding: 5% 1%;
+}
+
+/* Content */
+
+.wrapper {
+	margin: 0 auto;
+}
+
+#message {}
+
+#header > h1 {
+	font-size: 3em;
+	font-weight: bold;
+	font-stretch: expanded;
+	margin: 1% auto;
+}
+
+#main {	
+	margin-top: 3em;
+}
+
+/* Containers */
+
+.container-form-element {
+	margin: 40px 0;
+}
+
+.container-form-element:first-child {
+	margin: 0 0 40px 0;
+}
+
+
+.hide{
+	display: none;
+}
+
+.rad-button:active, .rad-button:hover, .rad-button:focus {
+    background-image: none;
+}
+
+.rad-button{
+    -webkit-border-radius: 4px; /* Saf3+, Chrome */
+    background-color: #fff;
+    background-image: -webkit-gradient(
+    	linear,
+    	left bottom,
+    	left top,
+    	color-stop(0.02, rgb(244,247,247)),
+    	color-stop(0.45, rgb(199,199,199)),
+    	color-stop(0.85, rgb(143,140,143)),
+    	color-stop(0.0, rgb(82,80,82))
+	);
+    border: 1px solid #ddd;
+    color: #000;
+    font-size: 3em;
+    font-weight: bold;
+    display: block;
+    padding: 10px 30px 6px;
+    text-shadow: 0 -1px 0 #ddd;
+    text-align: center;
+    height:46px;	
+
+}
+
+/* Nexus One Landscape */
+@media all and (max-width: 533px){
+	.wrapper {
+		padding: 2% 1%;
+	}
+	
+}
+	
+
+/* Nexus One Portrait */
+@media all and (max-width: 320px){
+	.wrapper {
+		padding: 5% 1%;
+	}
+
+
+}
+
