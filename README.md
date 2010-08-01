@@ -3,7 +3,7 @@ Lingua
 
 Description
 ---------------------
-Lingua is a universal language translation application that operates on various devices and platforms including modern desktop browsers, Android Devices (e.g. Nexus One), Apple iPad, modern mobile browsers and even desktop apps including Windows 7, Mac OS X and Linux.
+Lingua is a universal language translation application that operates on various devices and platforms including modern desktop browsers, Android Devices (e.g. Nexus One), Apple iPad, modern mobile browsers and even as a desktop app for supporting Windows 7, Mac OS X and Linux.
 
 Installation
 ---------------------
