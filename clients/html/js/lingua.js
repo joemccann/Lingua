@@ -37,7 +37,7 @@ $(document).ready(function(){
 			var input = $.data(document.body, "config").langFrom; 
 			var output = $('#langInput option:selected').val();
 
-			$('label, input[type=button], option').each(function(i, el){
+			$('label, input[type=button], option, textarea').each(function(i, el){
 	      translate.text({input:input,output:output}, el[!el.innerHTML ? 'value' : 'innerHTML'], function(result){
 				  el[!el.innerHTML ? 'value' : 'innerHTML'] = result;
 	      });
