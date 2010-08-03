@@ -13,5 +13,12 @@
             </intent-filter>
         </activity>
     </application>
+    <uses-sdk
+			android:minSdkVersion="3"
+			android:targetSdkVersion="8" /> 
+	<supports-screens
+		android:largeScreens="true"
+		android:normalScreens="true"
+		android:smallScreens="false" />    
 	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
 </manifest> 
