@@ -64,7 +64,7 @@ input[type=text], select, textarea{
 	margin:0 auto;
 	padding: 5px;
 	-webkit-border-radius: 4px;
-	font-size:1.3em;
+	font-size:1.2em;
 }
 
 textarea{
@@ -95,6 +95,18 @@ select{
 	display: none;
 }
 
+.left{
+	float:left;
+}
+
+.right{
+	float:right;
+}
+
+.clear{
+	clear:both;
+}
+
 .rad-button:active, .rad-button:hover, .rad-button:focus {
     background-image: none;
 }
@@ -114,8 +126,9 @@ select{
     border: 1px solid #ddd;
     color: #000;
     display: block;
+	font-stretch: ultra-condensed;
     font-size: 1.5em;
-    font-weight: bold;
+    font-weight: 300;
     height:30px;	
     padding: 5px 10px 6px;
     text-shadow: 0 -1px 0 #ddd;
@@ -129,8 +142,20 @@ select{
 		width:98%;
 	}
 
+	.mobile-left{
+		float:left;
+	}
+
+	.mobile-right{
+		float:right;
+	}
+
+	h1 {
+		margin: 0;
+	}
+
 	input[type=button], button{
-		margin:0 auto;
+		margin:0;
 		padding: 5px;
 		width:90%;
 	}
@@ -138,19 +163,27 @@ select{
 	input[type=text], select, textarea{
 		background-color: #ddd;
 		color:#000;
-		margin:0 auto;
+		margin:0;
 		padding: 5px;
 		width:91%;
 		-webkit-border-radius: 4px;
-		font-size:1.8em;
+		font-size:1.2em;
 	}
 
 	textarea{
 		width:90%;
+		min-height:36px;
 	}
 
+	.mobile-shrink{
+		width:48%;
+	}
 	
 }
+
+/* delete me */
+
+
 	
 
 /* Nexus One Portrait */
@@ -160,30 +193,42 @@ select{
 		width:98%;
 	}
 
+	.mobile-left{
+		float:left;
+	}
+
+	.mobile-right{
+		float:right;
+	}
+
 	h1 {
 		margin: 0;
 	}
 
 	input[type=button], button{
-		margin:0 auto;
+		margin:0;
 		padding: 5px;
-		width:97%;
+		width:100%;
 	}
 
 	input[type=text], select, textarea{
 		background-color: #ddd;
 		color:#000;
-		margin:0 auto;
+		margin:0;
 		padding: 5px;
-		width:98%;
+		width:100%;
 		-webkit-border-radius: 4px;
-		font-size:1.8em;
+		font-size:1.2em;
 	}
 
 	textarea{
-		width:97%;
+		min-height:36px;
+		width:96%;
 	}
 
+	.mobile-shrink{
+		width:48%;
+	}
 
 
 }
