@@ -126,6 +126,7 @@ select{
 @media all and (max-width: 533px){
 	.wrapper {
 		padding: 2% 1%;
+		width:98%;
 	}
 
 	input[type=button], button{
@@ -156,6 +157,11 @@ select{
 @media all and (max-width: 320px){
 	.wrapper {
 		padding: 2% 1%;
+		width:98%;
+	}
+
+	h1 {
+		margin: 0;
 	}
 
 	input[type=button], button{
