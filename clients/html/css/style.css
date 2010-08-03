@@ -1,4 +1,4 @@
-* {
+*{
 	margin:0;
 	padding:0;
 }
@@ -6,21 +6,18 @@
 body {
 	background: #000;
 	color: #999;
-	font-family: "Helevetica Neue", Helvetica, "Trebuchet MS", "Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
-	font-size: 62.5%;
-	height: 100%;
-	width: 100%;
-	margin:0 auto;
+	font-family: HelveticaNeue-Light, 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	font-size: 72.5%;
 }
 
-
 /* Type */	
-pre {
-	border-bottom: solid 1px #ccc;
-	font: normal 1em/1em Courier;
-	color: #fff;
-	padding: 5px 0;
-	margin: 0;
+
+h1 {
+	color:#3F0;
+	font-size:3.2em;
+	font-weight: 300;
+	font-stretch: ultra-condensed;
+	margin: 10px auto;
 }
 
 a {
@@ -33,75 +30,65 @@ p {
 }
 
 label, input {
-	font-size: 2em;
 	display: block;
 }
 
 label{
-	font-style: italic;
+	font-stretch: ultra-condensed;
 	color:#999;
 	padding-bottom: 5px;
-	font-size: 3em;
+	font-size: 1.4em;
 }
 
+input[type=button], button, input[type=text], select{
+	width:300px;
+}
+
+textarea{ width:290px;}
+
 input[type=button], button{
-	margin:0 auto;
 	padding: 5px;
-	width:98%;
 }
 
 input[type=text], select, textarea{
-	background-color: #ddd;
+    background-image: -webkit-gradient(
+		    linear,
+		    left bottom,
+		    left top,
+		    color-stop(0.14, rgb(222,222,222)),
+		    color-stop(0.48, rgb(235,235,235)),
+		    color-stop(1, rgb(255,255,255))
+	);
 	color:#000;
 	margin:0 auto;
 	padding: 5px;
-	width:99%;
 	-webkit-border-radius: 4px;
-	font-size:1.8em;
+	font-size:1.3em;
 }
 
 textarea{
-	width:98%;
+	min-height:62px;
 }
 
 select{
-	line-height:20px;
-}
-
-li{
-	list-style-type: none;
-	padding: 5% 1%;
+	height:30px;
 }
 
 /* Content */
-
 .wrapper {
 	margin: 0 auto;
-}
-
-#message {}
-
-#header > h1 {
-	font-size: 3em;
-	font-weight: bold;
-	font-stretch: expanded;
-	margin: 1% auto;
-}
-
-#main {	
-	margin-top: 3em;
+	width: 960px;
 }
 
 /* Containers */
 
 .container-form-element {
-	margin: 40px 0;
+	margin: 20px 0;
 }
 
 .container-form-element:first-child {
-	margin: 0 0 40px 0;
+	margin: 0 0 20px 0;
 }
-
 
 .hide{
 	display: none;
@@ -112,7 +99,7 @@ li{
 }
 
 .rad-button{
-    -webkit-border-radius: 4px; /* Saf3+, Chrome */
+    -webkit-border-radius: 4px;
     background-color: #fff;
     background-image: -webkit-gradient(
     	linear,
@@ -125,14 +112,13 @@ li{
 	);
     border: 1px solid #ddd;
     color: #000;
-    font-size: 3em;
-    font-weight: bold;
     display: block;
-    padding: 10px 30px 6px;
+    font-size: 1.5em;
+    font-weight: bold;
+    height:30px;	
+    padding: 5px 10px 6px;
     text-shadow: 0 -1px 0 #ddd;
     text-align: center;
-    height:46px;	
-
 }
 
 /* Nexus One Landscape */
@@ -140,6 +126,27 @@ li{
 	.wrapper {
 		padding: 2% 1%;
 	}
+
+	input[type=button], button{
+		margin:0 auto;
+		padding: 5px;
+		width:90%;
+	}
+
+	input[type=text], select, textarea{
+		background-color: #ddd;
+		color:#000;
+		margin:0 auto;
+		padding: 5px;
+		width:91%;
+		-webkit-border-radius: 4px;
+		font-size:1.8em;
+	}
+
+	textarea{
+		width:90%;
+	}
+
 	
 }
 	
@@ -147,8 +154,29 @@ li{
 /* Nexus One Portrait */
 @media all and (max-width: 320px){
 	.wrapper {
-		padding: 5% 1%;
+		padding: 2% 1%;
 	}
+
+	input[type=button], button{
+		margin:0 auto;
+		padding: 5px;
+		width:97%;
+	}
+
+	input[type=text], select, textarea{
+		background-color: #ddd;
+		color:#000;
+		margin:0 auto;
+		padding: 5px;
+		width:98%;
+		-webkit-border-radius: 4px;
+		font-size:1.8em;
+	}
+
+	textarea{
+		width:97%;
+	}
+
 
 
 }

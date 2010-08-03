@@ -18,6 +18,7 @@ $(document).ready(function(){
     $(document).bind('##TRANSLATE_TEXT##', function(e){
 
       $('#run').attr('disabled','disabled');
+			// Todo:  Update this to reflect langFrom.
       $('#run').val('translating...');     
       var input = $('#langInput').val(), output = $('#langOutput').val();
 
@@ -28,38 +29,47 @@ $(document).ready(function(){
       });
     });
 
+
+		function translateUi(){
+			// Let's automagically update the UI to show those phrases in the appropriate language.
+			
+			// Grab all text elements on the page
+			var input = $.data(document.body, "config").langFrom; 
+			var output = $('#langInput option:selected').val();
+
+			$('label, input[type=button], option').each(function(i, el){
+	      translate.text({input:input,output:output}, el[!el.innerHTML ? 'value' : 'innerHTML'], function(result){
+				  el[!el.innerHTML ? 'value' : 'innerHTML'] = result;
+	      });
+			});
+			
+			$.data(document.body, "config", {langFrom: output});
+			
+		}
+
   /**** END NAMED EVENTS ****/
 
   /**** BIND UI EVENTS ****/
-
-    // select box change
-    $('#langSelector').change(function(){
-      $(document).trigger('##CHANGE_LANGUAGE##', {"fontName":$(this).val()})
-    });
-  
-    /*
-    // you would think jQuery.change() would cover the keypress event on select boxes? 
-    $("#langSelector").keypress(function (){
-      // we could setup some blocking / keypress intent here for live-like updates
-      $(document).trigger('##CHANGE_LANGUAGE##', {"fontName":$(this).val()})
-    });
-
-    // keyup on textarea
-    $('#theCode').keyup(function(e){
-      // we could setup some blocking / keypress intent here for live-like updates
-      $(document).trigger('##TRANSLATE_TEXT##');
-    });
-    */      
+		
+		$('#langInput').bind('change', translateUi);
+      
     $('#run').click(function(e){
       $(document).trigger('##TRANSLATE_TEXT##');
     });
 
   /**** END UI BIND EVENTS ****/
 
-  // little bit of a onReady hack. i'll fix the API a bit so this can be done better
-  //$(document).trigger('##CHANGE_LANGUAGE##', {"fontName":'Doh'});
   $('#run').attr('disabled','');
+
+	// Check local storage for prefs and if not there, populate with the following:
   $('#langInput').val('English');
   $('#langOutput').val('German');
+
+	var currentLang = 'English';
+
+	// Getter:  $.data(document.body, "config").langFrom
+	$.data(document.body, "config", { langFrom: currentLang });	
+	
+
 
 });
