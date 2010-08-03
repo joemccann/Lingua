@@ -23,9 +23,11 @@
 </head>
 <body>
 <div class="wrapper">
-
+<div class='container-nav'>
 <h1>Lingua</h1>
-
+<a href="#about" class='mobile-anchor'>About</a>
+</div>
+<div class="container-left">
 <form>
 <div class='container-form-element'>
 	<label for="message">Enter Message</label>
@@ -43,7 +45,7 @@
 </div>
 
 <div class='container-form-element mobile-shrink mobile-left'>
-	<input type ="button" class='rad-button' id ="run" name="run" value ="Translate It" /> 
+	<input type ="button" class='rad-button' id ="run" name="run" value ="Translate" /> 
 </div>
 
 <div class='container-form-element mobile-shrink mobile-right'>
@@ -54,8 +56,14 @@
 	<textarea id ="output" class ="box"></textarea>
 </div>
 
-
 </form>
+</div>
+
+<div class='container-right' id="about">
+<p><span class='ganja'>Lingua</span> is a web-based language translation application.  Simply enter a word or phrase you would like translated, select the languages you are translating to and from and activate the translate button.</p>
+<p>Eventually, your most recently translated phrases will be available to you in offline mode and an Android app is on the way.</p>
+<p>Try it out on a mobile browser and watch the UI change.</p>
+</div>	
 
 </div>
 </body>

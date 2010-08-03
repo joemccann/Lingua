@@ -2,12 +2,12 @@
 	background-color:#000;
 	margin:0;
 	padding:0;
+	font-family: HelveticaNeue-Light, 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 body {
 	background: #000;
 	color: #999;
-	font-family: HelveticaNeue-Light, 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	font-size: 72.5%;
 }
 
@@ -22,8 +22,10 @@ h1 {
 }
 
 a {
-	color: #ff0;
+	color: #fff;
+	font-size:1.4em;
 	text-decoration: none;
+	font-stretch: normal;
 }
 
 p {
@@ -52,6 +54,7 @@ input[type=button], button{
 }
 
 input[type=text], select, textarea{
+	background:#fff;
     background-image: -webkit-gradient(
 		    linear,
 		    left bottom,
@@ -63,7 +66,6 @@ input[type=text], select, textarea{
 	color:#000;
 	margin:0 auto;
 	padding: 5px;
-	-webkit-border-radius: 4px;
 	font-size:1.2em;
 }
 
@@ -83,6 +85,21 @@ select{
 
 /* Containers */
 
+.container-left{
+	width:50%;
+	float:left;
+}
+
+.container-right{
+	float:left;
+	width:50%;
+}
+
+.container-right p{
+	text-align:justify;
+	margin-bottom:20px;
+}
+
 .container-form-element {
 	margin: 20px 0;
 }
@@ -90,6 +107,9 @@ select{
 .container-form-element:first-child {
 	margin: 0 0 20px 0;
 }
+
+
+/* Utility classes */
 
 .hide{
 	display: none;
@@ -107,9 +127,18 @@ select{
 	clear:both;
 }
 
+.ganja{
+	color:#3F0;
+	font-size:1.4em;
+	font-weight: 300;
+	font-stretch: ultra-condensed;
+}
+
 .rad-button:active, .rad-button:hover, .rad-button:focus {
     background-image: none;
 }
+
+.mobile-rule, .mobile-anchor{display:none;}
 
 .rad-button{
     -webkit-border-radius: 4px;
@@ -135,11 +164,28 @@ select{
     text-align: center;
 }
 
+
+
+
+
 /* Nexus One Landscape */
 @media all and (max-width: 533px){
 	.wrapper {
 		padding: 2% 1%;
 		width:98%;
+	}
+
+	.mobile-anchor{
+		display:inline-block;
+		padding-top:20px;
+		width:10%;
+	}
+
+	h1 {
+		margin: 0 0 10px;
+		display:inline-block;
+		float:left;
+		width:84%;
 	}
 
 	.mobile-left{
@@ -150,9 +196,7 @@ select{
 		float:right;
 	}
 
-	h1 {
-		margin: 0;
-	}
+
 
 	input[type=button], button{
 		margin:0;
@@ -179,6 +223,16 @@ select{
 		width:48%;
 	}
 	
+	
+	.container-left{
+		width:100%;
+	}
+
+	.container-right{
+		width:100%;
+	}
+	
+	
 }
 
 /* delete me */
@@ -193,16 +247,26 @@ select{
 		width:98%;
 	}
 
+	.mobile-anchor{
+		display:inline-block;
+		padding-top:20px;
+		width:10%;
+	}
+
+	h1 {
+		margin: 0 0 10px;
+		display:inline-block;
+		float:left;
+		width:84%;
+	}
+
+
 	.mobile-left{
 		float:left;
 	}
 
 	.mobile-right{
 		float:right;
-	}
-
-	h1 {
-		margin: 0;
 	}
 
 	input[type=button], button{
@@ -222,14 +286,23 @@ select{
 	}
 
 	textarea{
-		min-height:36px;
+		min-height:46px;
 		width:96%;
 	}
 
 	.mobile-shrink{
 		width:48%;
 	}
+	
+	.container-left{
+		width:100%;
+	}
 
+	.container-right{
+		margin-top:60px;
+		width:100%;
+	}
+	
 
 }
 
