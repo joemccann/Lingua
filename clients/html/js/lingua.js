@@ -57,6 +57,11 @@ $(document).ready(function(){
       $(document).trigger('##TRANSLATE_TEXT##');
     });
 
+		$('#clear').bind('click', function(e){
+			$('textarea').text('');
+			return false;
+		});
+
   /**** END UI BIND EVENTS ****/
 
   $('#run').attr('disabled','');
