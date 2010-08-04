@@ -115,6 +115,11 @@ select{
 
 /* Utility classes */
 
+.counter-hide{
+	display: block;
+}
+
+
 .hide{
 	display: none;
 }
@@ -169,7 +174,7 @@ select{
 }
 
 
-
+#about{display:block;}
 
 
 /* Nexus One Landscape */
@@ -191,6 +196,11 @@ select{
 		float:left;
 		width:84%;
 	}
+	
+	.counter-hide{
+		display: none;
+	}
+	
 
 	.mobile-left{
 		float:left;
@@ -261,6 +271,10 @@ select{
 		display:inline-block;
 		float:left;
 		width:84%;
+	}
+
+	.counter-hide{
+		display: none;
 	}
 
 

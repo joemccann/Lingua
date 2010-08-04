@@ -2,8 +2,16 @@ var languages;
 
 $().ready(function () {
 
+    var currentLang = 'English';
 
-	$.data(document.body, "view", "home")
+    // Getter:  $.data(document.body, "config").langFrom
+    $.data(document.body, "config", {
+        langFrom: currentLang
+    });
+
+	var config = $.extend( $.data(document.body, "config"), {foo: 'bar'})
+
+	$.data(document.body, "view", "home");
 
 	$('#link-about').bind('click', function(){
 		
@@ -12,9 +20,15 @@ $().ready(function () {
         var into = view === 'home' ? 'about' : 'home';
 		
 		$('#'+out).fadeOut(300, function(){
+			var $that = $(this);
 			$('#'+into).fadeIn(300, function(){
+				
 				$.data(document.body, "view", into);		       
 				$('#link-about').text( $.capFirst(out) ); 
+				// FFFFUUUUU inlne style FTL
+				$that.attr('style','').addClass('counter-hide');
+				$(this).removeClass('counter-hide');
+			
 			});
 		});
 		return false;
@@ -101,11 +115,5 @@ $().ready(function () {
     $('#langInput').val('English');
     $('#langOutput').val('German');
 
-    var currentLang = 'English';
-
-    // Getter:  $.data(document.body, "config").langFrom
-    $.data(document.body, "config", {
-        langFrom: currentLang
-    });
 
 });
