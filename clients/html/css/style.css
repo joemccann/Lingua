@@ -43,6 +43,10 @@ label{
 	font-size: 1.4em;
 }
 
+select, option{
+	background:#fff;
+}
+
 input[type=button], button, input[type=text], select{
 	width:300px;
 }
@@ -171,8 +175,8 @@ select{
 /* Nexus One Landscape */
 @media all and (max-width: 533px){
 	.wrapper {
-		padding: 2% 1%;
-		width:98%;
+		padding: 0% 3%;
+		width:94%;
 	}
 
 	.mobile-anchor{
@@ -197,11 +201,10 @@ select{
 	}
 
 
-
 	input[type=button], button{
 		margin:0;
-		padding: 5px;
-		width:90%;
+		padding:0;
+		width:93%;
 	}
 
 	input[type=text], select, textarea{
@@ -209,17 +212,18 @@ select{
 		color:#000;
 		margin:0;
 		padding: 5px;
-		width:91%;
+		width:97%;
 		-webkit-border-radius: 4px;
 		font-size:1.2em;
 	}
 
 	textarea{
-		width:90%;
+		width:94%;
 		min-height:36px;
 	}
 
 	.mobile-shrink{
+		margin-top:0;
 		width:48%;
 	}
 	
@@ -232,13 +236,12 @@ select{
 		width:100%;
 	}
 	
+	#about{display:none;}
+	
 	
 }
 
-/* delete me */
 
-
-	
 
 /* Nexus One Portrait */
 @media all and (max-width: 320px){
@@ -291,6 +294,7 @@ select{
 	}
 
 	.mobile-shrink{
+		margin-top:0;
 		width:48%;
 	}
 	
@@ -299,9 +303,11 @@ select{
 	}
 
 	.container-right{
-		margin-top:60px;
+		margin-top:10px;
 		width:100%;
 	}
+	
+	#about{display:none;}
 	
 
 }

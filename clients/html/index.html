@@ -1,70 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-	<meta name="apple-mobile-web-app-capable" content="yes"/>
-	<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
-	<!--<link rel="apple-touch-startup-image" href="icon-iphone.png"> -->
-	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=false;"/>
-	<title>Lingua - Universal Language</title>
-	<link rel="stylesheet" type="text/css" href="css/style.css" />
-	<script type="text/javascript" src="js/jquery.min.js"></script>
-
-	<script src="js/lawnchair/src/adaptors/LawnchairAdaptorHelpers.js" type="text/javascript" charset="utf-8"></script>
-	<script src="js/lawnchair/src/adaptors/DOMStorageAdaptor.js" type="text/javascript" charset="utf-8"></script>
-	<script src="js/lawnchair/src/adaptors/WebkitSQLiteAdaptor.js" type="text/javascript" charset="utf-8"></script>
-	<script src="js/lawnchair/Lawnchair.js" type="text/javascript" charset="utf-8"></script>
-
-	<script src="js/translate.js/lib/languages.js" type="text/javascript" charset="utf-8"></script>
-	<script src="js/translate.js/lib/translate.js" type="text/javascript" charset="utf-8"></script>
-
-	<script type="text/javascript" src="js/global.js"></script>
-	<script type="text/javascript" src="js/lingua.js"></script>
-</head>
-<body>
-<div class="wrapper">
-<div class='container-nav'>
-<h1>Lingua</h1>
-<a href="#about" class='mobile-anchor'>About</a>
-</div>
-<div class="container-left">
-<form>
-<div class='container-form-element'>
-	<label for="message">Enter Message</label>
-	<textarea id ="theCode" class ="box">And if you gaze for long into an abyss, the abyss gazes also into you. </textarea>
-
-</div>
-<div class='container-form-element'>
-	<label for="message">Select Language From</label>
-	<select id ="langInput" name ="langInput"></select>
-</div>
-
-<div class='container-form-element'>
-	<label for="message">Select Language To</label>
-	<select id ="langOutput" name ="langOutput"></select>
-</div>
-
-<div class='container-form-element mobile-shrink mobile-left'>
-	<input type ="button" class='rad-button' id ="run" name="run" value ="Translate" /> 
-</div>
-
-<div class='container-form-element mobile-shrink mobile-right'>
-	<input type ="button" class='rad-button' id ="clear" name="clear" value ="Clear" /> 
-</div>
-
-<div class='container-form-element clear'>
-	<textarea id ="output" class ="box"></textarea>
-</div>
-
-</form>
-</div>
-
-<div class='container-right' id="about">
-<p><span class='ganja'>Lingua</span> is a web-based language translation application.  Simply enter a word or phrase you would like translated, select the languages you are translating to and from and activate the translate button.</p>
-<p>Eventually, your most recently translated phrases will be available to you in offline mode and an Android app is on the way.</p>
-<p>Try it out on a mobile browser and watch the UI change.</p>
-</div>	
-
-</div>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <!--<link rel="apple-touch-startup-image" href="icon-iphone.png"> --> 
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=false;" />
+    <title>
+      Lingua - Universal Language
+    </title>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <script type="text/javascript" src="js/jquery.min.js">
+    </script>
+    <script src="js/lawnchair/src/adaptors/LawnchairAdaptorHelpers.js" type="text/javascript" charset="utf-8">
+    </script>
+    <script src="js/lawnchair/src/adaptors/DOMStorageAdaptor.js" type="text/javascript" charset="utf-8">
+    </script>
+    <script src="js/lawnchair/src/adaptors/WebkitSQLiteAdaptor.js" type="text/javascript" charset="utf-8">
+    </script>
+    <script src="js/lawnchair/Lawnchair.js" type="text/javascript" charset="utf-8">
+    </script>
+    <script src="js/translate.js/lib/languages.js" type="text/javascript" charset="utf-8">
+    </script>
+    <script src="js/translate.js/lib/translate.js" type="text/javascript" charset="utf-8">
+    </script>
+    <script type="text/javascript" src="js/global.js">
+    </script>
+    <script type="text/javascript" src="js/lingua.js">
+    </script>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="container-nav">
+        <h1>
+          Lingua
+        </h1>
+        <a href="#about" id="link-about" class="mobile-anchor">
+          About
+        </a>
+      </div>
+      <div class="container-left" id="home">
+        <form>
+          <div class="container-form-element">
+            <label for="message">
+              Enter Message
+            </label>
+            <textarea id="theCode" class="box">And if you gaze for long into an abyss, the abyss gazes also into you.</textarea>
+          </div>
+          <div class="container-form-element">
+            <label for="message">
+              Select Language From
+            </label>
+            <select id="langInput" name="langInput">
+            </select>
+          </div>
+          <div class="container-form-element">
+            <label for="message">
+              Select Language To
+            </label>
+            <select id="langOutput" name="langOutput">
+            </select>
+          </div>
+          <div class="container-form-element mobile-shrink mobile-left">
+            <input type="button" class="rad-button" id="run" name="run" value="Translate" />
+          </div>
+          <div class="container-form-element mobile-shrink mobile-right">
+            <input type="button" class="rad-button" id="clear" name="clear" value="Clear" />
+          </div>
+          <div class="container-form-element clear">
+            <textarea id="output" class="box">
+            </textarea>
+          </div>
+        </form>
+      </div>
+      <div class="container-right" id="about">
+        <p>
+          <span class="ganja">Lingua</span> is a web-based language translation application.  Simply enter a word or phrase you would like translated, select the languages you are translating to and from and activate the translate button.
+        </p>
+        <p>
+          Eventually, your most recently translated phrases will be available to you in offline mode and an Android app is on the way.
+        </p>
+        <p>
+          Try it out on a mobile browser and watch the UI change.
+        </p>
+      </div>
+    </div>
+  </body>
 </html>

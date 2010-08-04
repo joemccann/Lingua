@@ -1,6 +1,24 @@
 var languages;
 
-$(document).ready(function () {
+$().ready(function () {
+
+
+	$.data(document.body, "view", "home")
+
+	$('#link-about').bind('click', function(){
+		
+		var view = $.data(document.body, "view");
+        var out = view === 'home' ? 'home' : 'about';
+        var into = view === 'home' ? 'about' : 'home';
+		
+		$('#'+out).fadeOut(300, function(){
+			$('#'+into).fadeIn(300, function(){
+				$.data(document.body, "view", into);		       
+				$('#link-about').text( $.capFirst(out) ); 
+			});
+		});
+		return false;
+	});
 
     languages = getLangs();
 
@@ -49,7 +67,7 @@ $(document).ready(function () {
 			}
 			catch(e)
 			{
-				console.log(e);
+//				console.log(e);
 			}
             });
         });
