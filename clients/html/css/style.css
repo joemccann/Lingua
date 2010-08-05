@@ -40,7 +40,7 @@ label{
 	font-stretch: ultra-condensed;
 	color:#999;
 	padding-bottom: 5px;
-	font-size: 1.4em;
+	font-size: 2em;
 }
 
 select, option{
@@ -165,10 +165,10 @@ select{
     color: #000;
     display: block;
 	font-stretch: ultra-condensed;
-    font-size: 1.5em;
+    font-size: 1.8em;
     font-weight: 300;
-    height:30px;	
-    padding: 5px 10px 6px;
+    height:36px;	
+    padding: 5px 15px 6px;
     text-shadow: 0 -1px 0 #ddd;
     text-align: center;
 }
@@ -299,11 +299,11 @@ select{
 		padding: 5px;
 		width:100%;
 		-webkit-border-radius: 4px;
-		font-size:1.2em;
+		font-size:1.6em;
 	}
 
 	textarea{
-		min-height:46px;
+		min-height:66px;
 		width:96%;
 	}
 
