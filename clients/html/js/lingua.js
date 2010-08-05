@@ -116,9 +116,9 @@ $().ready(function () {
     $('#langOutput').val('German');
 	
 	// Lose the URL bar...
-	/mobile/i.test(navigator.userAgent) && !location.hash && setTimeout(function () {
-	  window.scrollTo(0, 1);
-	}, 1000);​
+	/mobile/i.test(navigator.userAgent) && !location.hash && setTimeout(function(){
+		window.scrollTo(0,1);
+	},1000);
 
 
 });
