@@ -114,6 +114,11 @@ $().ready(function () {
     // Check local storage for prefs and if not there, populate with the following:
     $('#langInput').val('English');
     $('#langOutput').val('German');
+	
+	// Lose the URL bar...
+	/mobile/i.test(navigator.userAgent) && !location.hash && setTimeout(function () {
+	  window.scrollTo(0, 1);
+	}, 1000);​
 
 
 });
