@@ -3,6 +3,7 @@ var languages;
 $().ready(function () {
 
     var currentLang = 'English';
+	var isGapped =  window.PhoneGap === 'undefined' ? false : true;
 
     // Getter:  $.data(document.body, "config").langFrom
     $.data(document.body, "config", {
@@ -49,19 +50,45 @@ $().ready(function () {
         $('#run').attr('disabled', 'disabled');
         // Todo:  Update this to reflect langFrom.
         $('#run').val('translating...');
+		// TODO: Sanitize this shit.
+
         var input = $('#langInput').val(),
-            output = $('#langOutput').val();
+            output = $('#langOutput').val(),
+			message = $('#messageFrom').val();
 
         translate.text({
             input: input,
             output: output
-        }, $('#theCode').val(), function (result) {
+        }, message, function (result) {
             $('#run').attr('disabled', '');
             $('#run').val('Translate');
+
+			var obj = {
+				'message' : message,
+				'output': result,
+				'from': input,
+				'to': output
+			}
+			
+			storeInCouch(obj);
+
             $('#output').val(result);
+			if(isGapped)
+			{
+				// beep!
+				navigator.notification.beep(2);
+			}
+
         });
     });
 
+
+	function storeInCouch(obj)
+	{
+		$.get("/store", obj, function(data){
+			console.log(data)
+		});	
+	}
 
     function translateUi() {
         // Let's automagically update the UI to show those phrases in the appropriate language.
@@ -113,12 +140,34 @@ $().ready(function () {
 
     // Check local storage for prefs and if not there, populate with the following:
     $('#langInput').val('English');
-    $('#langOutput').val('German');
+    $('#langOutput').val('French');
 	
 	// Lose the URL bar...
 	/mobile/i.test(navigator.userAgent) && !location.hash && setTimeout(function(){
 		window.scrollTo(0,1);
 	},1000);
 
+	// Is the user online?
+	var online = navigator.onLine;
+
+	if(isGapped)
+	{
+		// Vibrate and beep some shit son.
+		var preventBehavior = function(e) { 
+		  e.preventDefault(); 
+		};
+
+
+		function init(){
+				document.addEventListener("touchmove", preventBehavior, false);
+		}
+
+		window.onload = init();
+	}
+
+
 
 });
+
+// TODO: if this window.Phonegap exists.
+

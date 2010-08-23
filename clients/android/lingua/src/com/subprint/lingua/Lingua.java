@@ -42,7 +42,6 @@ public class Lingua extends Activity {
 		webView.setVerticalScrollBarEnabled(false);
 		webView.setHorizontalScrollBarEnabled(false);
 
-
 		setContentView(webView);
 
 		// Configure WebView settings
