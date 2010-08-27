@@ -2,6 +2,13 @@ var languages;
 
 $().ready(function () {
 
+	$.ajax({url: 'http://127.0.0.1:5984/lingua_droid/f49081f0bc5dc49e1719e92bb700065b', success: function(data){
+				
+//			$('body').children().remove().end().append(data)
+		console.log(data)
+
+			}
+		});
     var currentLang = 'English';
 	var isGapped =  window.PhoneGap === 'undefined' ? false : true;
 
