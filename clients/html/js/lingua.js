@@ -2,50 +2,56 @@ var languages;
 
 $().ready(function () {
 
-	$.capFirst = function(string)
-	{
-	    return string.charAt(0).toUpperCase() + string.slice(1);
-	}
-//	$.ajax({url: 'http://127.0.0.1:5984/lingua_droid/f49081f0bc5dc49e1719e92bb700065b', success: function(data){
-				
-//			$('body').children().remove().end().append(data)
-		//console.log(data)
+    $.capFirst = function (string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+    
+/*
+    $.ajax({
+        url: 'http://127.0.0.1:5984/lingua_droid/f49081f0bc5dc49e1719e92bb700065b',
+        success: function (data) {
+            $('body').children().remove().end().append(data)
+            console.log(data)
+        }
+    });
+*/
 
-	//		}
-	//	});
     var currentLang = 'English';
-		// TODO: fix this...check for camera or something
-	var isGapped =  window.PhoneGap === 'undefined' ? false : true;
+
+    // TODO: fix this...check for camera or something
+    var isGapped = window.PhoneGap === 'undefined' ? false : true;
 
     // Getter:  $.data(document.body, "config").langFrom
     $.data(document.body, "config", {
         langFrom: currentLang
     });
 
-	var config = $.extend( $.data(document.body, "config"), {foo: 'bar'})
+    var config = $.extend($.data(document.body, "config"), {
+        foo: 'bar'
+    })
 
-	$.data(document.body, "view", "home");
+    $.data(document.body, "view", "home");
 
-	$('#link-about').bind('click', function(){
-		
-		var view = $.data(document.body, "view");
+    $('#link-about').bind('click', function () {
+
+        var view = $.data(document.body, "view");
         var out = view === 'home' ? 'home' : 'about';
         var into = view === 'home' ? 'about' : 'home';
-		
-		$('#'+out).fadeOut(300, function(){
-			var $that = $(this);
-			$('#'+into).fadeIn(300, function(){
-				
-				$.data(document.body, "view", into);		       
-				$('#link-about').text( $.capFirst(out) ); 
-				// FFFFUUUUU inlne style FTL
-				$that.attr('style','').addClass('counter-hide');
-				$(this).removeClass('counter-hide');
-			
-			});
-		});
-		return false;
-	});
+
+        $('#' + out).fadeOut(300, function () {
+            var $that = $(this);
+            $('#' + into).fadeIn(300, function () {
+
+                $.data(document.body, "view", into);
+                $('#link-about').text($.capFirst(out));
+                // FFFFUUUUU inlne style FTL
+                $that.attr('style', '').addClass('counter-hide');
+                $(this).removeClass('counter-hide');
+
+            });
+        });
+        return false;
+    });
 
     languages = getLangs();
 
@@ -62,11 +68,10 @@ $().ready(function () {
         $('#run').attr('disabled', 'disabled');
         // Todo:  Update this to reflect langFrom.
         $('#run').val('translating...');
-		// TODO: Sanitize this shit.
-
+        // TODO: Sanitize this shit.
         var input = $('#langInput').val(),
             output = $('#langOutput').val(),
-			message = $('#messageFrom').val();
+            message = $('#messageFrom').val();
 
         translate.text({
             input: input,
@@ -75,32 +80,30 @@ $().ready(function () {
             $('#run').attr('disabled', '');
             $('#run').val('Translate');
 
-			var obj = {
-				'message' : message,
-				'output': result,
-				'from': input,
-				'to': output
-			}
-			
-			storeInCouch(obj);
+            var obj = {
+                'message': message,
+                'output': result,
+                'from': input,
+                'to': output
+            }
+
+            storeInCouch(obj);
 
             $('#output').val(result);
-			if(isGapped)
-			{
-				// beep!
-				navigator.notification.beep(2);
-			}
+            if (isGapped) {
+                // beep!
+                navigator.notification.beep(2);
+            }
 
         });
     });
 
 
-	function storeInCouch(obj)
-	{
-		$.get("/store", obj, function(data){
-			console.log(data)
-		});	
-	}
+    function storeInCouch(obj) {
+        $.get("/store", obj, function (data) {
+            console.log(data)
+        });
+    }
 
     function translateUi() {
         // Let's automagically update the UI to show those phrases in the appropriate language.
@@ -108,20 +111,18 @@ $().ready(function () {
         var input = $.data(document.body, "config").langFrom;
         var output = $('#langInput option:selected').val();
 
-		// Could definitely be optimized to not send so many requests, but fuck it for now.
+        // Could definitely be optimized to not send so many requests, but fuck it for now.
         $('label, input[type=button], option, textarea, p, a').each(function (i, el) {
             translate.text({
                 input: input,
                 output: output
             }, el[!el.innerHTML ? 'value' : 'innerHTML'], function (result) {
-			try
-			{
-				el[!el.innerHTML ? 'value' : 'innerHTML'] = result;               
-			}
-			catch(e)
-			{
-//				console.log(e);
-			}
+                try {
+                    el[!el.innerHTML ? 'value' : 'innerHTML'] = result;
+                }
+                catch (e) {
+                    //				console.log(e);
+                }
             });
         });
 
@@ -153,63 +154,60 @@ $().ready(function () {
     // Check local storage for prefs and if not there, populate with the following:
     $('#langInput').val('English');
     $('#langOutput').val('French');
-	
-	// Lose the URL bar...
-	/mobile/i.test(navigator.userAgent) && !location.hash && setTimeout(function(){
-		window.scrollTo(0,1);
-	},1000);
 
-	// Is the user online?
-	var online = navigator.onLine;
+    // Lose the URL bar...
+    /mobile/i.test(navigator.userAgent) && !location.hash && setTimeout(function () {
+        window.scrollTo(0, 1);
+    }, 1000);
 
-	if(isGapped)
-	{
-		// Vibrate and beep some shit son.
-		var preventBehavior = function(e) { 
-		  e.preventDefault(); 
-		};
+    // Is the user online?
+    var online = navigator.onLine;
 
-
-		function init(){
-				document.addEventListener("touchmove", preventBehavior, false);
-		}
-
-		window.onload = init();
-	}
+    if (isGapped) {
+        // Vibrate and beep some shit son.
+        var preventBehavior = function (e) {
+            e.preventDefault();
+        };
 
 
-	// Chromeless dragging in desktop app
-	    (function() {
-	        var dragging = false;
-	
-					var isTitanium = typeof window.Titanium === 'object' ? true : false;
+        function init() {
+            document.addEventListener("touchmove", preventBehavior, false);
+        }
 
-	        document.onmousemove = function() {
-	            if (!dragging || !isTitanium)
-	            return;
+        window.onload = init();
+    }
 
-	            Titanium.UI.currentWindow.setX(Titanium.UI.currentWindow.getX() + event.clientX - xstart);
-	            Titanium.UI.currentWindow.setY(Titanium.UI.currentWindow.getY() + event.clientY - ystart);
 
-	        }
+    // Chromeless dragging in desktop app
+    (function () {
+        var dragging = false;
 
-	        document.onmousedown = function(e) {
-							// disallow textarea
-	            if (isTitanium && e.target.className !== 'box') {
-	                dragging = true;
-	                xstart = event.clientX;
-	                ystart = event.clientY;
-	            }
-	        }
+        var isTitanium = typeof window.Titanium === 'object' ? true : false;
 
-	        document.onmouseup = function() {
-	            dragging = false;
-	        }
-	    })();
+        document.onmousemove = function () {
+            if (!dragging || !isTitanium) return;
+
+            Titanium.UI.currentWindow.setX(Titanium.UI.currentWindow.getX() + event.clientX - xstart);
+            Titanium.UI.currentWindow.setY(Titanium.UI.currentWindow.getY() + event.clientY - ystart);
+
+        }
+
+        document.onmousedown = function (e) {
+            // disallow textarea
+            if (isTitanium && e.target.className !== 'box') {
+                dragging = true;
+                xstart = event.clientX;
+                ystart = event.clientY;
+            }
+        }
+
+        document.onmouseup = function () {
+            dragging = false;
+        }
+    })();
 
 
 
 });
 
 // TODO: if this window.Phonegap exists.
-
