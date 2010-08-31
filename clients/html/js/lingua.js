@@ -2,14 +2,19 @@ var languages;
 
 $().ready(function () {
 
-	$.ajax({url: 'http://127.0.0.1:5984/lingua_droid/f49081f0bc5dc49e1719e92bb700065b', success: function(data){
+	$.capFirst = function(string)
+	{
+	    return string.charAt(0).toUpperCase() + string.slice(1);
+	}
+//	$.ajax({url: 'http://127.0.0.1:5984/lingua_droid/f49081f0bc5dc49e1719e92bb700065b', success: function(data){
 				
 //			$('body').children().remove().end().append(data)
-		console.log(data)
+		//console.log(data)
 
-			}
-		});
+	//		}
+	//	});
     var currentLang = 'English';
+		// TODO: fix this...check for camera or something
 	var isGapped =  window.PhoneGap === 'undefined' ? false : true;
 
     // Getter:  $.data(document.body, "config").langFrom
@@ -171,6 +176,36 @@ $().ready(function () {
 
 		window.onload = init();
 	}
+
+
+	// Chromeless dragging in desktop app
+	    (function() {
+	        var dragging = false;
+	
+					var isTitanium = typeof window.Titanium === 'object' ? true : false;
+
+	        document.onmousemove = function() {
+	            if (!dragging || !isTitanium)
+	            return;
+
+	            Titanium.UI.currentWindow.setX(Titanium.UI.currentWindow.getX() + event.clientX - xstart);
+	            Titanium.UI.currentWindow.setY(Titanium.UI.currentWindow.getY() + event.clientY - ystart);
+
+	        }
+
+	        document.onmousedown = function(e) {
+							// disallow textarea
+	            if (isTitanium && e.target.className !== 'box') {
+	                dragging = true;
+	                xstart = event.clientX;
+	                ystart = event.clientY;
+	            }
+	        }
+
+	        document.onmouseup = function() {
+	            dragging = false;
+	        }
+	    })();
 
 
 

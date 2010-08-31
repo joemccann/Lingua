@@ -10,6 +10,7 @@ var express = require('express'),
   	client = couchdb.createClient(80, 'subprint.couchone.com'),
 	request = require('request'),
   	db = client.db('lingua-couch');
+		translate = require('./public/js/translate.js/lib/translate.js')
 
 var app = express.createServer();
 
@@ -151,14 +152,21 @@ app.get('/store', function(req, res){
 function yqlNyTimes()
 {
 
-var yql = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%20%3D%20%22http%3A%2F%2Ffeeds.nytimes.com%2Fnyt%2Frss%2FHomePage%22&format=json&diagnostics=true';
-	
+var yql = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20rss%20where%20url%3D%22http%3A%2F%2Ffeeds.nytimes.com%2Fnyt%2Frss%2FHomePage%22&format=json';	
 	request({uri:yql}, function (error, response, body) {
 		if (!error && response.statusCode == 200) {
-			sys.puts(sys.inspect(body))
 			doc = JSON.parse(body);
-			//var arrayOfItems = doc.results.item;
-			rev = doc._rev;
+			var items = doc.query.results.item;
+			items.forEach(function(el){
+					// change this to a random other pair.
+					var input = 'English', output = "Spanish";
+					translate.text({input:input,output:output}, el.title, function(resp){
+						sys.puts('\n'+el.title);
+						sys.puts("--Translated in "+output + " --");
+						sys.puts(resp+ '\n');
+						// Populate couchdb instance here.
+					});
+			});
 		}
 		else
 		{
@@ -167,7 +175,7 @@ var yql = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%2
 	})
 }
 
-yqlNyTimes();
+//yqlNyTimes();
 
 app.listen(3001);
 
