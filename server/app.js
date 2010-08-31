@@ -9,8 +9,10 @@ var express = require('express'),
 	couchdb = require('couchdb'),
   	client = couchdb.createClient(80, 'subprint.couchone.com'),
 	request = require('request'),
-  	db = client.db('lingua-couch');
-		translate = require('./public/js/translate.js/lib/translate.js')
+  	db = client.db('lingua-couch'),
+	translate = require('./public/js/translate.js/lib/translate.js'),
+	languages = require('./public/js/translate.js/lib/languages.js');
+	
 
 var app = express.createServer();
 
@@ -56,6 +58,8 @@ function updateDoc(obj)
 	})
 }
 
+
+// Initialize vars relative to couchdb instance.
 request({uri:uri}, function (error, response, body) {
 	if (!error && response.statusCode == 200) {
 	//	sys.puts(sys.inspect(body))
@@ -69,7 +73,10 @@ request({uri:uri}, function (error, response, body) {
 })
 
 
-app.get('/store', function(req, res){
+
+function storeInCouch(req)
+{
+
 	// TODO: Sanitize this
 	var compoundKey = req.query.from.toLowerCase() + "_" + req.query.to.toLowerCase();
 	
@@ -146,20 +153,35 @@ app.get('/store', function(req, res){
 	
 	updateDoc(updateHash);
 
+}
+
+app.get('/store', function(req, res){
+
+	storeInCouch(req);
+
 	res.send('Something useful here.')
 });
 
+var allLangs = Object.keys(languages.getLangs());
+
+
+function grabRandomLanguage()
+{
+	return allLangs[Math.floor ( Math.random() * allLangs.length )];
+}
+
 function yqlNyTimes()
 {
-
-var yql = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20rss%20where%20url%3D%22http%3A%2F%2Ffeeds.nytimes.com%2Fnyt%2Frss%2FHomePage%22&format=json';	
+	var yql = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20rss%20where%20url%3D%22http%3A%2F%2Ffeeds.nytimes.com%2Fnyt%2Frss%2FHomePage%22&format=json';	
+	
+	var input = 'English';
+	var output = grabRandomLanguage();
+		
 	request({uri:yql}, function (error, response, body) {
 		if (!error && response.statusCode == 200) {
 			doc = JSON.parse(body);
 			var items = doc.query.results.item;
 			items.forEach(function(el){
-					// change this to a random other pair.
-					var input = 'English', output = "Spanish";
 					translate.text({input:input,output:output}, el.title, function(resp){
 						sys.puts('\n'+el.title);
 						sys.puts("--Translated in "+output + " --");
