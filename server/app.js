@@ -11,15 +11,6 @@ var express = require('express'),
 	request = require('request'),
   	db = client.db('lingua-couch');
 
-	Object.keys = Object.keys || function(o) {
-	    var result = [];
-	    for(var name in o) {
-	        if (o.hasOwnProperty(name))
-	          result.push(name);
-	    }
-	    return result;
-	};
-
 var app = express.createServer();
 
 // Configuration
@@ -156,6 +147,27 @@ app.get('/store', function(req, res){
 
 	res.send('Something useful here.')
 });
+
+function yqlNyTimes()
+{
+
+var yql = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20html%20where%20url%20%3D%20%22http%3A%2F%2Ffeeds.nytimes.com%2Fnyt%2Frss%2FHomePage%22&format=json&diagnostics=true';
+	
+	request({uri:yql}, function (error, response, body) {
+		if (!error && response.statusCode == 200) {
+			sys.puts(sys.inspect(body))
+			doc = JSON.parse(body);
+			//var arrayOfItems = doc.results.item;
+			rev = doc._rev;
+		}
+		else
+		{
+			assert.equal(response.statusCode, 200);
+		}
+	})
+}
+
+yqlNyTimes();
 
 app.listen(3001);
 
