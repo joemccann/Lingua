@@ -36,6 +36,15 @@ app.configure('production', function () {
     app.use(connect.errorHandler());
 });
 
+
+app.get('/store', function (req, res) {
+
+    storeInCouch(req);
+
+    res.send('Something useful here.')
+});
+
+
 function buildUri(host, db, id) {
     return host + db + id;
 }
@@ -57,12 +66,12 @@ request({
         sys.puts(sys.inspect(body))
         doc = JSON.parse(body);
         rev = doc._rev;
-        yql();
+        initYql();
     }
     else {
         assert.equal(response.statusCode, 200);
     }
-})
+});
 
 
 function updateDoc(obj) {
@@ -150,34 +159,26 @@ function storeInCouch(req) {
 
 }
 
-app.get('/store', function (req, res) {
 
-    storeInCouch(req);
-
-    res.send('Something useful here.')
-});
 
 var allLangs = Object.keys(languages.getLangs());
+var yql = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20rss%20where%20url%3D%22http%3A%2F%2Ffeeds.nytimes.com%2Fnyt%2Frss%2FHomePage%22&format=json';
 
+var langFrom = 'English';
+var langTo = grabRandomLanguage();
+
+var couchStack = [];
+
+var iterator = 0;
+var yqlNodeLen = 0;
 
 function grabRandomLanguage() {
     return allLangs[Math.floor(Math.random() * allLangs.length)];
 }
 
-function yqlNyTimes() {
-    var yql = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20rss%20where%20url%3D%22http%3A%2F%2Ffeeds.nytimes.com%2Fnyt%2Frss%2FHomePage%22&format=json';
-
-    var langFrom = 'English';
-    var langTo = grabRandomLanguage();
-
-    request({
-        uri: yql
-    }, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            doc = JSON.parse(body);
-            var items = doc.query.results.item;
-            items.forEach(function (el) {
-                translate.text({
+function translateYql(el)
+{
+	translate.text({
                     input: langFrom,
                     output: langTo
                 }, el.title, function (resp) {
@@ -191,9 +192,35 @@ function yqlNyTimes() {
                 			}
 
                     }
-                    storeInCouch(hash);
+                    couchStack.push(hash);
+                    iterator++;
+                    console.log(iterator)
+                    console.log(yqlNodeLen+ '\n')                   
+                    if(iterator === yqlNodeLen)
+                    // TODO: WRONG!
+                    {
+                    	console.log('yea')
+                    	if(couchStack.length)
+                    	{
+                    		setInterval()(function(){
+                    			storeInCouch(couchStack.pop());
+                    		}, 1000);
+                    	}
+                    }
                 });
-            });
+}
+
+
+function yqlNyTimes() {
+
+    request({
+        uri: yql
+    }, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            doc = JSON.parse(body);
+            var items = doc.query.results.item;
+            yqlNodeLen = items.length;
+            items.forEach(translateYql);
         }
         else {
             assert.equal(response.statusCode, 200);
@@ -201,12 +228,9 @@ function yqlNyTimes() {
     })
 }
 
-function yql(){
-yqlNyTimes();
-
-//setInterval(yqlNyTimes, 10000);
-
-
+function initYql(){
+	yqlNyTimes();
+	//setInterval(yqlNyTimes, 10000);
 }
 
 
