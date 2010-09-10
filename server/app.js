@@ -159,8 +159,6 @@ function storeInCouch(req) {
 
 }
 
-
-
 var allLangs = Object.keys(languages.getLangs());
 var yql = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20rss%20where%20url%3D%22http%3A%2F%2Ffeeds.nytimes.com%2Fnyt%2Frss%2FHomePage%22&format=json';
 
@@ -202,9 +200,9 @@ function translateYql(el)
                     	console.log('yea')
                     	if(couchStack.length)
                     	{
-                    		setInterval()(function(){
+                    		setInterval(function(){
                     			storeInCouch(couchStack.pop());
-                    		}, 1000);
+                    		}, 5000);
                     	}
                     }
                 });
@@ -229,7 +227,7 @@ function yqlNyTimes() {
 }
 
 function initYql(){
-	yqlNyTimes();
+	//yqlNyTimes();
 	//setInterval(yqlNyTimes, 10000);
 }
 
