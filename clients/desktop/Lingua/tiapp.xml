@@ -13,10 +13,10 @@
 <id>initial</id>
 <title>Lingua</title>
 <url>app://index.html</url>
-<width>520</width>
+<width>360</width>
 <max-width>3000</max-width>
 <min-width>0</min-width>
-<height>480</height>
+<height>440</height>
 <max-height>0</max-height>
 <min-height>0</min-height>
 <fullscreen>false</fullscreen>
