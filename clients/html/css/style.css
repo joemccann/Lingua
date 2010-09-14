@@ -8,7 +8,7 @@
 body {
 	background: #000;
 	color: #999;
-	font-size: 72.5%;
+	font-size: 62.5%;
 }
 
 /* Type */	
@@ -30,6 +30,7 @@ a {
 
 p {
 	font-size: 1.8em;
+	line-height: 24px;
 }
 
 label, input {
@@ -40,7 +41,7 @@ label{
 	font-stretch: ultra-condensed;
 	color:#999;
 	padding-bottom: 5px;
-	font-size: 2em;
+	font-size: 1.4em;
 }
 
 select, option{
@@ -84,7 +85,7 @@ select{
 /* Content */
 .wrapper {
 	margin: 0 auto;
-	width: 960px;
+	width: 690px;
 }
 
 /* Containers */
@@ -138,7 +139,6 @@ select{
 
 .ganja{
 	color:#3F0;
-	font-size:1.4em;
 	font-weight: 300;
 	font-stretch: ultra-condensed;
 }
@@ -165,7 +165,7 @@ select{
     color: #000;
     display: block;
 	font-stretch: ultra-condensed;
-    font-size: 1.8em;
+    font-size: 1.4em;
     font-weight: 300;
     height:36px;	
     padding: 5px 15px 6px;
@@ -174,7 +174,10 @@ select{
 }
 
 
-#about{display:block;}
+#about{
+	display:block;
+	padding-top: 17px;
+}
 
 
 /* Nexus One Landscape */
