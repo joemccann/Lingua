@@ -1,36 +1,42 @@
 var languages;
+window.isGapped = false;
 
 $().ready(function () {
 
     $.capFirst = function (string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
-    
-/*
-    $.ajax({
-        url: 'http://127.0.0.1:5984/lingua_droid/f49081f0bc5dc49e1719e92bb700065b',
-        success: function (data) {
-            $('body').children().remove().end().append(data)
-            console.log(data)
-        }
-    });
-*/
 
-    var currentLang = 'English';
 
-    // TODO: fix this...check for camera or something
-    var isGapped = window.PhoneGap === 'undefined' ? false : true;
-
+    var currentLang = 'English', 
+    	isGapped = (typeof Droidgap === 'undefined') ? false : true;
+    	
     // Getter:  $.data(document.body, "config").langFrom
     $.data(document.body, "config", {
         langFrom: currentLang
     });
 
-    var config = $.extend($.data(document.body, "config"), {
-        foo: 'bar'
-    })
-
     $.data(document.body, "view", "home");
+
+	function offlineLookup()
+	{
+		if(window.isGapped)
+	    {
+	    	// Let's check couchDB if available.
+	    	
+	    	
+	    	// Grab to value and search for that key in couchdb.  If there, return array and search array for result.
+			/*
+			    $.ajax({
+			        url: 'http://127.0.0.1:5984/lingua_droid/f49081f0bc5dc49e1719e92bb700065b',
+			        success: function (data) {
+			            $('body').children().remove().end().append(data)
+			            console.log(data)
+			        }
+			    });
+			*/
+	   	}
+	}
 
     $('#link-about').bind('click', function () {
 
@@ -65,6 +71,13 @@ $().ready(function () {
 
     $(document).bind('##TRANSLATE_TEXT##', function (e) {
 
+		if(!navigator.onLine)
+		{
+			// testing offline android client...if ur offline in ur browser, not supported for prototype...
+			offlineLookup();
+			return;
+		}
+
         $('#run').attr('disabled', 'disabled');
         // Todo:  Update this to reflect langFrom.
         $('#run').val('translating...');
@@ -90,9 +103,12 @@ $().ready(function () {
             storeInCouch(obj);
 
             $('#output').val(result);
-            if (isGapped) {
+
+          
+            if (window.isGapped) {
                 // beep!
                 navigator.notification.beep(2);
+                navigator.notification.vibrate(250);
             }
 
         });
@@ -155,7 +171,7 @@ $().ready(function () {
     $('#langInput').val('English');
     $('#langOutput').val('French');
 
-    // Lose the URL bar...
+    // Lose the URL bar for mobile version...
     /mobile/i.test(navigator.userAgent) && !location.hash && setTimeout(function () {
         window.scrollTo(0, 1);
     }, 1000);
@@ -163,28 +179,15 @@ $().ready(function () {
     // Is the user online?
     var online = navigator.onLine;
 
-    if (isGapped) {
-        // Vibrate and beep some shit son.
-        var preventBehavior = function (e) {
-            e.preventDefault();
-        };
+	// Are we in a Titanium Desktop app?
+	var isTitanium = typeof window.Titanium === 'object' ? true : false;
 
-
-        function init() {
-            document.addEventListener("touchmove", preventBehavior, false);
-        }
-
-        window.onload = init();
-    }
-
-
-    // Chromeless dragging in desktop app
+    // Chromeless dragging in Titanium Desktop app
     (function () {
         var dragging = false;
 
-        var isTitanium = typeof window.Titanium === 'object' ? true : false;
-
-        document.onmousemove = function () {
+        document.onmousemove = function () 
+        {
             if (!dragging || !isTitanium) return;
 
             Titanium.UI.currentWindow.setX(Titanium.UI.currentWindow.getX() + event.clientX - xstart);
@@ -192,9 +195,11 @@ $().ready(function () {
 
         }
 
-        document.onmousedown = function (e) {
+        document.onmousedown = function (e) 
+        {
             // disallow textarea
-            if (isTitanium && e.target.className !== 'box') {
+            if (isTitanium && e.target.className !== 'box') 
+            {
                 dragging = true;
                 xstart = event.clientX;
                 ystart = event.clientY;
@@ -206,8 +211,13 @@ $().ready(function () {
         }
     })();
 
-
-
 });
 
 // TODO: if this window.Phonegap exists.
+
+window.onload = function()
+{
+	document.addEventListener('deviceready',function() {
+		window.isGapped = true;
+	},false);
+}
