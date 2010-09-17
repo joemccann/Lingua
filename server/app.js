@@ -58,7 +58,7 @@ var dbId = 'f49081f0bc5dc49e1719e92bb700065b',
 	allLangs = Object.keys(languages.getLangs()),
 	yql = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20rss%20where%20url%3D%22http%3A%2F%2Ffeeds.nytimes.com%2Fnyt%2Frss%2FHomePage%22&format=json',
 	langFrom = 'English',
-	langTo = grabRandomLanguage(),
+	langTo = 'French'; //grabRandomLanguage(),
 	couchStack = [],
 	yqlNodeLen = 0;
 
@@ -119,18 +119,21 @@ function storeInCouch(req, cb)
   // TODO: Sanitize this
   var compoundKey = req.query.from.toLowerCase() + "_" + req.query.to.toLowerCase();
 
+	//console.log(sys.inspect(doc))
+
   var words = [];
   words = req.query.message.split(" ");
   var firstword = words[0].toLowerCase();
+
+	console.log(firstword)
 
   // Does compoundKey exist?
   if (typeof doc[compoundKey] === 'undefined')
   {
     // Create a new entry
     console.log('Adding a new compoundkey: ' + compoundKey);
-    doc[compoundKey] =
-    {
-    };
+    doc[compoundKey] = {};
+    
     doc[compoundKey][firstword] = [];
     doc[compoundKey][firstword][0] =
     {
@@ -197,6 +200,9 @@ function storeInCouch(req, cb)
     method: 'PUT',
     body: JSON.stringify(doc)
   }
+  
+  
+  console.log(sys.inspect(updateHash))
 
   updateDoc(updateHash, cb);
 
@@ -242,7 +248,7 @@ function translateYql(el, i)
     sys.puts("--Translated in " + langTo + " --");
     sys.puts(resp + '\n');
 
-    // Create formatted hash for couchdb.
+    // Create formatted hash for couchdb as it is expecting something similar to a http request.
     var hash =
     {
       'query': {
@@ -258,6 +264,7 @@ function translateYql(el, i)
 
     // If were at the end of the line, process the stack.
     if (i === yqlNodeLen - 1) processCouchStack();
+
   });
 }
 
@@ -273,9 +280,10 @@ function yqlNyTimes()
   {
     if (!error && response.statusCode == 200)
     {
-      doc = JSON.parse(body);
+      var doc = JSON.parse(body);
       var items = doc.query.results.item;
       yqlNodeLen = items.length;
+      
       items.forEach(translateYql);
     }
     else
