@@ -169,7 +169,7 @@ $().ready(function () {
 
     // Check local storage for prefs and if not there, populate with the following:
     $('#langInput').val('English');
-    $('#langOutput').val('French');
+    $('#langOutput').val('Dutch');
 
     // Lose the URL bar for mobile version...
     /mobile/i.test(navigator.userAgent) && !location.hash && setTimeout(function () {

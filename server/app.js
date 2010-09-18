@@ -58,7 +58,7 @@ var dbId = 'lingua-couch',
 	allLangs = Object.keys(languages.getLangs()),
 	yql = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20rss%20where%20url%3D%22http%3A%2F%2Ffeeds.nytimes.com%2Fnyt%2Frss%2FHomePage%22&format=json',
 	langFrom = 'English',
-	langTo = 'French'; //grabRandomLanguage(),
+	langTo = 'Dutch'; //grabRandomLanguage(),
 	couchStack = [],
 	yqlNodeLen = 0;
 
