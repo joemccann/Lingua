@@ -49,7 +49,7 @@ app.get('/store', function (req, res)
 });
 
 // http://subprint.couchone.com/lingua-couch/f49081f0bc5dc49e1719e92bb700065b
-var dbId = 'f49081f0bc5dc49e1719e92bb700065b',
+var dbId = 'lingua-couch',
 	db = 'lingua-couch/',
 	couchone = 'http://subprint.couchone.com/',
 	doc = '',
@@ -282,6 +282,7 @@ function yqlNyTimes()
     {
       var doc = JSON.parse(body);
       var items = doc.query.results.item;
+      // Capture the length as we need this later.
       yqlNodeLen = items.length;
       
       items.forEach(translateYql);
