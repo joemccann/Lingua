@@ -1,4 +1,5 @@
-var languages;
+var languages; 
+window.doc = '';
 window.isGapped = false;
 
 $().ready(function () {
@@ -7,36 +8,15 @@ $().ready(function () {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
+    var currentLang = 'English',
+        isGapped = (typeof Droidgap === 'undefined') ? false : true;
 
-    var currentLang = 'English', 
-    	isGapped = (typeof Droidgap === 'undefined') ? false : true;
-    	
     // Getter:  $.data(document.body, "config").langFrom
     $.data(document.body, "config", {
         langFrom: currentLang
     });
 
     $.data(document.body, "view", "home");
-
-	function offlineLookup()
-	{
-		if(window.isGapped)
-	    {
-	    	// Let's check couchDB if available.
-	    	
-	    	
-	    	// Grab to value and search for that key in couchdb.  If there, return array and search array for result.
-			/*
-			    $.ajax({
-			        url: 'http://127.0.0.1:5984/lingua_droid/f49081f0bc5dc49e1719e92bb700065b',
-			        success: function (data) {
-			            $('body').children().remove().end().append(data)
-			            console.log(data)
-			        }
-			    });
-			*/
-	   	}
-	}
 
     $('#link-about').bind('click', function () {
 
@@ -71,21 +51,22 @@ $().ready(function () {
 
     $(document).bind('##TRANSLATE_TEXT##', function (e) {
 
-		if(!navigator.onLine)
-		{
-			// testing offline android client...if ur offline in ur browser, not supported for prototype...
-			offlineLookup();
-			return;
-		}
-
-        $('#run').attr('disabled', 'disabled');
-        // Todo:  Update this to reflect langFrom.
-        $('#run').val('translating...');
         // TODO: Sanitize this shit.
         var input = $('#langInput').val(),
             output = $('#langOutput').val(),
             message = $('#messageFrom').val();
 
+        $('#run').attr('disabled', 'disabled');
+        // Todo:  Update this to reflect langFrom.
+        $('#run').val('translating...');
+
+        if (window.isGapped) {
+            // testing offline android client...if ur offline in ur browser, not supported for prototype...
+            offlineLookup(input, output, message);
+            return;
+        }
+
+        // otherwise, use the Google Translation API
         translate.text({
             input: input,
             output: output
@@ -104,7 +85,6 @@ $().ready(function () {
 
             $('#output').val(result);
 
-          
             if (window.isGapped) {
                 // beep!
                 navigator.notification.beep(2);
@@ -121,103 +101,186 @@ $().ready(function () {
         });
     }
 
-    function translateUi() {
-        // Let's automagically update the UI to show those phrases in the appropriate language.
-        // Grab all text elements on the page
-        var input = $.data(document.body, "config").langFrom;
-        var output = $('#langInput option:selected').val();
-
-        // Could definitely be optimized to not send so many requests, but fuck it for now.
-        $('label, input[type=button], option, textarea, p, a').each(function (i, el) {
-            translate.text({
-                input: input,
-                output: output
-            }, el[!el.innerHTML ? 'value' : 'innerHTML'], function (result) {
-                try {
-                    el[!el.innerHTML ? 'value' : 'innerHTML'] = result;
-                }
-                catch (e) {
-                    //				console.log(e);
-                }
-            });
-        });
-
-        $.data(document.body, "config", {
-            langFrom: output
-        });
-
+    function offlineLookup(from, to, message) {
+        if (window.isGapped) {
+            getOfflineCouch(from, to, message);
+        }
     }
 
-    /**** END NAMED EVENTS ****/
+    function getOfflineCouch(from, to, message, cb) {
 
-    /**** BIND UI EVENTS ****/
+        // TODO: Sanitize this
+        var compoundKey = from.toLowerCase() + "_" + to.toLowerCase();
+	    var words = [];
+        words = message.split(" ");
+        var firstword = words[0].toLowerCase();
 
-    $('#langInput').bind('change', translateUi);
+		console.log(doc)
 
-    $('#run').click(function (e) {
-        $(document).trigger('##TRANSLATE_TEXT##');
-    });
+        console.log(firstword + " is the first word.")
+       	console.log(compoundKey + " is the compound key.")
 
-    $('#clear').bind('click', function (e) {
-        $('textarea').text('');
-        return false;
-    });
-
-    /**** END UI BIND EVENTS ****/
-
-    $('#run').attr('disabled', '');
-
-    // Check local storage for prefs and if not there, populate with the following:
-    $('#langInput').val('English');
-    $('#langOutput').val('Dutch');
-
-    // Lose the URL bar for mobile version...
-    /mobile/i.test(navigator.userAgent) && !location.hash && setTimeout(function () {
-        window.scrollTo(0, 1);
-    }, 1000);
-
-    // Is the user online?
-    var online = navigator.onLine;
-
-	// Are we in a Titanium Desktop app?
-	var isTitanium = typeof window.Titanium === 'object' ? true : false;
-
-    // Chromeless dragging in Titanium Desktop app
-    (function () {
-        var dragging = false;
-
-        document.onmousemove = function () 
-        {
-            if (!dragging || !isTitanium) return;
-
-            Titanium.UI.currentWindow.setX(Titanium.UI.currentWindow.getX() + event.clientX - xstart);
-            Titanium.UI.currentWindow.setY(Titanium.UI.currentWindow.getY() + event.clientY - ystart);
-
+        // Does compoundKey exist?
+        if (typeof doc[compoundKey] === 'undefined') {
+            offlineResult(false, 'The compound key was not found.');
         }
+        else {
+            // Does the firstword key exist?
+            if (typeof doc[compoundKey][firstword] === 'undefined') {
+                offlineResult(false, 'The first word was not found.');
+            }
+            else {
+                // iterate over the array looking for the phrase and if it exists, just update the timestamp.
+                var messageExists = false;
+                var index = -1;
 
-        document.onmousedown = function (e) 
-        {
-            // disallow textarea
-            if (isTitanium && e.target.className !== 'box') 
-            {
-                dragging = true;
-                xstart = event.clientX;
-                ystart = event.clientY;
+                doc[compoundKey][firstword].forEach(function (el, i, a) {
+                    if (el.from === message) {
+                        messageExists = true;
+                        matchedTranslatedPhrase = el.to;
+                        index = i;
+                    }
+                });
+
+                if (messageExists) {
+                    offlineResult(true, 'The message was found.', matchedTranslatedPhrase);
+                }
+                else {
+                    // add the new message, output and timestamp
+                    offlineResult(false, 'The message was not found.');
+                }
+            }
+        }
+   }
+
+        function offlineResult(flag, logMessage, translation) {
+        	console.log(flag)
+        	console.log("***************");
+			console.log(logMessage)
+        	console.log("***************");
+            if (flag) {
+                $('#output').val(translation)
+                console.log(logMessage);
+            }
+            else {
+                alert(logMessage);
+                console.log(logMessage)
             }
         }
 
-        document.onmouseup = function () {
-            dragging = false;
-        }
-    })();
 
-});
+        function translateUi() {
+            // Let's automagically update the UI to show those phrases in the appropriate language.
+            // Grab all text elements on the page
+            var input = $.data(document.body, "config").langFrom;
+            var output = $('#langInput option:selected').val();
+
+            // Could definitely be optimized to not send so many requests, but fuck it for now.
+            $('label, input[type=button], option, textarea, p, a').each(function (i, el) {
+                translate.text({
+                    input: input,
+                    output: output
+                }, el[!el.innerHTML ? 'value' : 'innerHTML'], function (result) {
+                    try {
+                        el[!el.innerHTML ? 'value' : 'innerHTML'] = result;
+                    }
+                    catch (e) {
+                        //				console.log(e);
+                    }
+                });
+            });
+
+            $.data(document.body, "config", {
+                langFrom: output
+            });
+
+        }
+
+        /**** END NAMED EVENTS ****/
+
+        /**** BIND UI EVENTS ****/
+
+        $('#langInput').bind('change', translateUi);
+
+        $('#run').click(function (e) {
+            $(document).trigger('##TRANSLATE_TEXT##');
+        });
+
+        $('#clear').bind('click', function (e) {
+            $('textarea').text('');
+            return false;
+        });
+
+        /**** END UI BIND EVENTS ****/
+
+        $('#run').attr('disabled', '');
+
+        // Check local storage for prefs and if not there, populate with the following:
+        $('#langInput').val('English');
+        $('#langOutput').val('Dutch');
+
+        // Lose the URL bar for mobile version...
+        /mobile/i.test(navigator.userAgent) && !location.hash && setTimeout(function () {
+            window.scrollTo(0, 1);
+        }, 1000);
+
+        // Is the user online?
+        var online = navigator.onLine;
+
+        // Are we in a Titanium Desktop app?
+        var isTitanium = typeof window.Titanium === 'object' ? true : false;
+
+        // Chromeless dragging in Titanium Desktop app
+        (function () {
+            var dragging = false;
+
+            document.onmousemove = function () {
+                if (!dragging || !isTitanium) return;
+
+                Titanium.UI.currentWindow.setX(Titanium.UI.currentWindow.getX() + event.clientX - xstart);
+                Titanium.UI.currentWindow.setY(Titanium.UI.currentWindow.getY() + event.clientY - ystart);
+
+            }
+
+            document.onmousedown = function (e) {
+                // disallow textarea
+                if (isTitanium && e.target.className !== 'box') {
+                    dragging = true;
+                    xstart = event.clientX;
+                    ystart = event.clientY;
+                }
+            }
+
+            document.onmouseup = function () {
+                dragging = false;
+            }
+        })();
+
+    });
 
 // TODO: if this window.Phonegap exists.
+window.onload = function () {
+    document.addEventListener('deviceready', function () {
+    	alert( !!(device.platform) )
+    
+    if( !!(device.platform) )
+    {
+        window.isGapped = true;
 
-window.onload = function()
-{
-	document.addEventListener('deviceready',function() {
-		window.isGapped = true;
-	},false);
+	        $.ajax({
+	            url: 'http://127.0.0.1:5984/lingua/lingua-couch',
+	            success: function (data) {
+	            	console.log(data)
+	                doc = JSON.parse(data);
+	                console.log(doc)
+	            }
+	        });
+    }
+    else
+    {
+    }
+    
+    
+
+    }, false);
 }
