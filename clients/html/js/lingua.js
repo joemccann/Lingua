@@ -163,7 +163,6 @@ $().ready(function () {
                 console.log(logMessage);
             }
             else {
-                alert(logMessage);
                 console.log(logMessage)
             }
         }
@@ -200,7 +199,8 @@ $().ready(function () {
 
         /**** BIND UI EVENTS ****/
 
-        $('#langInput').bind('change', translateUi);
+		// We could do the following, but causes usability issues so a no go.  Leave in here! It's a prototype.
+		//   $('#langInput').bind('change', translateUi);
 
         $('#run').click(function (e) {
             $(document).trigger('##TRANSLATE_TEXT##');
@@ -261,18 +261,18 @@ $().ready(function () {
 // TODO: if this window.Phonegap exists.
 window.onload = function () {
     document.addEventListener('deviceready', function () {
-    	alert( !!(device.platform) )
     
     if( !!(device.platform) )
     {
+    	// So we are on the Android device.
         window.isGapped = true;
 
+		// Let's load up the db from couch for quick access.
 	        $.ajax({
 	            url: 'http://127.0.0.1:5984/lingua/lingua-couch',
 	            success: function (data) {
-	            	console.log(data)
 	                doc = JSON.parse(data);
-	                console.log(doc)
+	                data && console.log('Successfully snagged data from couchdb.');
 	            }
 	        });
     }
