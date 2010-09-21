@@ -1,3 +1,9 @@
+// Feature Requests
+
+// 1 - Reset button if you decide to select away from English and to Dutch and then want to go back to English
+// 2 - 
+
+
 var languages; 
 window.doc = '';
 window.isGapped = false;
@@ -9,9 +15,60 @@ $().ready(function () {
     }
 
     var currentLang = 'English',
-        isGapped = (typeof Droidgap === 'undefined') ? false : true;
+        isGapped = false;
+
+        var $messageFrom = $('#messageFrom');
+        
+   		$messageFrom.focus(function(){
+   			$(this).css('outline', '10')
+   		});
+   		
+   		$messageFrom.bind('keypress', function(e)
+   		{
+   			if (e.charCode == 13) 
+ 			{
+ 				$(document).trigger('##TRANSLATE_TEXT##');
+            	return false;
+        	}
+   		});
+
+
+	$({
+		'div': {
+			'id': 'foo'
+		}
+	}
+	).appendTo( $(document.body).children())
+
+
+
+	
+	// Treat the H1 like a proper anchor tag...
+	var $h1 = $('h1:first');
+	
+	$h1.bind('mouseover focus', function(){
+		$h1.css(
+		{	'cursor': 'pointer',
+			'width':'3em',
+			'margin' : '10px 0',
+			'-webkit-transition': 'font-color 2s linear'
+		});
+	})
+		.bind('mouseout blur', function(){
+		$h1.css({	
+			'cursor': 'pointer',
+			'background' : 'transparent',
+			'-webkit-transition': 'background-color 0.2s linear'		});
+		});
+
+	
+	$h1.bind('click', function(){
+		window.location.href = '/';
+	});
+
 
     // Getter:  $.data(document.body, "config").langFrom
+	// We may use some or add some propeties later to be used for someful, well, useful.
     $.data(document.body, "config", {
         langFrom: currentLang
     });
@@ -36,6 +93,10 @@ $().ready(function () {
 
             });
         });
+        
+        
+        $('#langInput').focus();
+        
         return false;
     });
 
@@ -52,17 +113,23 @@ $().ready(function () {
     $(document).bind('##TRANSLATE_TEXT##', function (e) {
 
         // TODO: Sanitize this shit.
+        // Set input values
         var input = $('#langInput').val(),
             output = $('#langOutput').val(),
             message = $('#messageFrom').val();
 
+		// update the button's state
         $('#run').attr('disabled', 'disabled');
-        // Todo:  Update this to reflect langFrom.
         $('#run').val('translating...');
 
         if (window.isGapped) {
+        
             // testing offline android client...if ur offline in ur browser, not supported for prototype...
-            offlineLookup(input, output, message);
+            offlineLookup(input, output, message, function(){
+                    $('#run').attr('disabled', '');
+            });
+            
+            //TODO:  UPDATE STATE OF $('#run').val()
             return;
         }
 
@@ -85,12 +152,6 @@ $().ready(function () {
 
             $('#output').val(result);
 
-            if (window.isGapped) {
-                // beep!
-                navigator.notification.beep(2);
-                navigator.notification.vibrate(250);
-            }
-
         });
     });
 
@@ -101,21 +162,27 @@ $().ready(function () {
         });
     }
 
-    function offlineLookup(from, to, message) {
-        if (window.isGapped) {
-            getOfflineCouch(from, to, message);
-        }
+    function offlineLookup(from, to, message, cb) {
+
+			// Yes this additional function is unnecessary, but I left it open incase there were other 
+			// sync-based functions to call here.
+			
+            getOfflineCouch(from, to, message, function(){
+	                // beep!
+	        	navigator.notification.beep(2);
+	            navigator.notification.vibrate(250);
+	            cb && cb();
+            });
+           
     }
 
     function getOfflineCouch(from, to, message, cb) {
 
-        // TODO: Sanitize this
+        // TODO: Sanitize this...maybe.  I'm looking at you @slexaxton...
         var compoundKey = from.toLowerCase() + "_" + to.toLowerCase();
 	    var words = [];
         words = message.split(" ");
         var firstword = words[0].toLowerCase();
-
-		console.log(doc)
 
         console.log(firstword + " is the first word.")
        	console.log(compoundKey + " is the compound key.")
@@ -123,6 +190,7 @@ $().ready(function () {
         // Does compoundKey exist?
         if (typeof doc[compoundKey] === 'undefined') {
             offlineResult(false, 'The compound key was not found.');
+            return;
         }
         else {
             // Does the firstword key exist?
@@ -144,6 +212,7 @@ $().ready(function () {
 
                 if (messageExists) {
                     offlineResult(true, 'The message was found.', matchedTranslatedPhrase);
+                    cb && cb();  // could combine this two line to one line but easier to read for noobs.
                 }
                 else {
                     // add the new message, output and timestamp
@@ -151,23 +220,23 @@ $().ready(function () {
                 }
             }
         }
+        
+        
    }
 
+		// It's kinda like error handling, in a cadillac...
         function offlineResult(flag, logMessage, translation) {
-        	console.log(flag)
-        	console.log("***************");
-			console.log(logMessage)
-        	console.log("***************");
             if (flag) {
                 $('#output').val(translation)
-                console.log(logMessage);
+				console.log(logMessage)
             }
             else {
                 console.log(logMessage)
+				console.log(logMessage)
             }
         }
 
-
+		// translates the entire Ui in the language from drop down so the UI converts to that persons native languae.
         function translateUi() {
             // Let's automagically update the UI to show those phrases in the appropriate language.
             // Grab all text elements on the page
@@ -195,9 +264,6 @@ $().ready(function () {
 
         }
 
-        /**** END NAMED EVENTS ****/
-
-        /**** BIND UI EVENTS ****/
 
 		// We could do the following, but causes usability issues so a no go.  Leave in here! It's a prototype.
 		//   $('#langInput').bind('change', translateUi);
@@ -210,8 +276,6 @@ $().ready(function () {
             $('textarea').text('');
             return false;
         });
-
-        /**** END UI BIND EVENTS ****/
 
         $('#run').attr('disabled', '');
 
@@ -261,7 +325,7 @@ $().ready(function () {
 // TODO: if this window.Phonegap exists.
 window.onload = function () {
     document.addEventListener('deviceready', function () {
-    
+    console.log(!!device.platform)
     if( !!(device.platform) )
     {
     	// So we are on the Android device.

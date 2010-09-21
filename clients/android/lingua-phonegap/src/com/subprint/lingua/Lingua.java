@@ -12,8 +12,7 @@ public class Lingua extends DroidGap
 @Override
 public void onCreate(Bundle savedInstanceState)
 {
-super.onCreate(savedInstanceState);
-super.loadUrl("file:///android_asset/index.html");
-
+	super.onCreate(savedInstanceState);
+	super.loadUrl("file:///android_asset/index.html");
 }
 }

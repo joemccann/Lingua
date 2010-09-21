@@ -53,7 +53,7 @@ var dbId = 'lingua-couch', // eventually pass enviornment variables and set defa
     langFrom = 'English',
     langTo = 'Dutch'; //grabRandomLanguage(),
 	couchStack = [], yqlNodeLen = 0;
-	yqlInterval = (parseInt(process.ARGV[2], 10) * 100000) || 300000;  // every n number of minutes or 3 minutes. 
+	yqlInterval = (parseInt(process.ARGV[2], 10) * 100000) || null;  // every n number of minutes or none at all.   
 
 
 // Initialize vars relative to couchdb instance.
@@ -68,7 +68,9 @@ request({
 
         // Now kick off some YQL action to build up our database.
         yqlNyTimes();
-        setInterval(yqlNyTimes, yqlInterval);
+
+		// If we passed in an interval from the command line then, call it on that interval.
+        yqlInterval && setInterval(yqlNyTimes, yqlInterval);
     }
     else {
         assert.equal(response.statusCode, 200);
