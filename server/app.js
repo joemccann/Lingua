@@ -47,7 +47,7 @@ app.get('/store', function (req, res)
 
 });
 
-var dbId = 'lingua-couch', // eventually pass enviornment variables and set default, but hardcode nao for prototype.
+var dbId = 'lingua-couch', // eventually pass command line variables and set default, but hardcode nao for prototype.
     db = 'lingua-couch/',
     couchone = 'http://subprint.couchone.com/',
     doc = '',

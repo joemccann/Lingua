@@ -4,7 +4,7 @@
 #image:default_app_logo.png
 #url:http://www.subprint.com
 #guid:63c201c5-9b77-4f89-a76f-dd2b07bb7ae3
-#desc:No description provided
+#desc:Lingua is a language translation application.
 #type:desktop
 runtime:1.0.0
 api:1.0.0
@@ -14,8 +14,6 @@ tiapp:1.0.0
 tifilesystem:1.0.0
 tiplatform:1.0.0
 tiui:1.0.0
-python:1.0.0
-ruby:1.0.0
 ticodec:1.0.0
 tidatabase:1.0.0
 tidesktop:1.0.0
