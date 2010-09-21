@@ -42,8 +42,7 @@ app.get('/store', function (req, res) {
 
 });
 
-// http://subprint.couchone.com/lingua-couch/f49081f0bc5dc49e1719e92bb700065b
-var dbId = 'lingua-couch',
+var dbId = 'lingua-couch', // eventually pass enviornment variables and set default, but hardcode nao for prototype.
     db = 'lingua-couch/',
     couchone = 'http://subprint.couchone.com/',
     doc = '',
@@ -54,6 +53,7 @@ var dbId = 'lingua-couch',
     langFrom = 'English',
     langTo = 'Dutch'; //grabRandomLanguage(),
 	couchStack = [], yqlNodeLen = 0;
+	yqlInterval = (parseInt(process.ARGV[2], 10) * 100000) || 300000;  // every n number of minutes or 3 minutes. 
 
 
 // Initialize vars relative to couchdb instance.
@@ -61,13 +61,14 @@ request({
     uri: uri
 }, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-        //sys.puts(sys.inspect(body))
+        //sys.puts(sys.inspect(body)) // If you need to see it...
         console.log('Initial call to couchone successful.')
         doc = JSON.parse(body);
         rev = doc._rev;
 
         // Now kick off some YQL action to build up our database.
         yqlNyTimes();
+        setInterval(yqlNyTimes, yqlInterval);
     }
     else {
         assert.equal(response.statusCode, 200);
@@ -75,17 +76,13 @@ request({
 });
 
 // Helper method for building couchone uri.
-
-
 function buildUri(host, db, id) {
     return host + db + id;
 }
 
 
-// Update the document with the newly data object.
+// Update the document with the new data object.
 // Fire callback if it exits.
-
-
 function updateDoc(obj, cb) {
     request(obj, function (error, response, body) {
         if (error) {
@@ -102,7 +99,6 @@ function updateDoc(obj, cb) {
 }
 
 // Runs various checks to properly format the data for storage in couchone.
-
 
 function storeInCouch(req, cb) {
 
@@ -169,20 +165,21 @@ function storeInCouch(req, cb) {
     // Set the proper revision number.
     doc._rev = rev;
 
+	// Build data object (record).
     var updateHash = {
         uri: uri,
         method: 'PUT',
         body: JSON.stringify(doc)
     }
 
+	// Shove into couch.
     updateDoc(updateHash, cb);
 
 }
 
 // Iterate through each item in the couchStack array async style.
-
-
-function processCouchStack() {
+function processCouchStack() 
+{
     // Pop item from stack
     var cur = couchStack.length === 0 ? null : couchStack.pop();
 
@@ -201,12 +198,12 @@ function processCouchStack() {
 
 
 // Helper method for grabbing a random language from array of langs.
-function grabRandomLanguage() {
-    return allLangs[Math.floor(Math.random() * allLangs.length)];
-}
+function grabRandomLanguage() { return allLangs[Math.floor(Math.random() * allLangs.length)]; }
 
 // Translate a Title from the YQL response.
-function translateYql(el, i) {
+function translateYql(el, i) 
+{
+
     translate.text({
         input: langFrom,
         output: langTo
@@ -226,6 +223,7 @@ function translateYql(el, i) {
             }
 
         }
+        
         // Add to stack (state machine if you will).
         couchStack.push(hash);
 
@@ -237,8 +235,6 @@ function translateYql(el, i) {
 
 
 // Pull the headlines from the NY Times RSS feed with YQL.
-
-
 function yqlNyTimes() {
 
     request({
