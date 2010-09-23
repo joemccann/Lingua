@@ -26,7 +26,7 @@ app.configure(function ()
 app.configure('development', function () 
 {
     app.use(connect.errorHandler({
-        dumpExceptions: true,
+        dumpExceptions: false,
         showStack: true
     }));
 });

@@ -1,8 +1,11 @@
 // Feature Requests/TODO
 // 1 - Reset button if you decide to select away from English and to Dutch and then want to go back to English
 // 2 - Force continuous replication for couchdb on startup for Android client.
+// 3 - check to see that the translation doesn't === the original phrase.
 
 var languages;
+
+// somewhere, 3 baby kittens died.
 window.doc = '';
 window.isGapped = false;
 window.networkState = null;
@@ -31,12 +34,13 @@ $().ready(function ()
         });
 	};
     
-    // vars...derp
+    // derp
     var currentLang = 'English',
         isGapped = false,
+        storeUrl = '',
     	isTitanium = (typeof window.Titanium === 'object') ? true : false;
 
-    // just for less typing; premature optimization...pfft, whatever...    
+    // just for less typing; premature optimization...whatever...    
     var $messageFrom = $('#messageFrom'),
         $h1 = $('h1:first'),
         $run = $('#run'),
@@ -54,6 +58,7 @@ $().ready(function ()
 
     $.data(document.body, "view", "home");
 
+	// Toggle copy and form in < 533px view.
     $('#link-about').bind('click', function ()
     {
 
@@ -82,34 +87,38 @@ $().ready(function ()
         return false;
     });
 
+
+	// If they hit enter, send it.  usability issue maybe?  think about a textarea...
     $messageFrom.bind('keypress', function (e)
     {
         if (e.charCode == 13)
         {
             $(document).trigger('##TRANSLATE_TEXT##');
-            return false;
+            e.preventDefault();
         }
     });
 
     // Treat the H1 like a proper anchor tag...
-    $h1.bind('click', function ()
+    $h1.bind('click', function (e)
     {
         window.location.reload(); // yes we could just make this an anchor tag, but it's a prototype AND won't work in android/titanium.
+        e.stopPropagation();
     });
 
 
-    // We could do the following, but causes usability issues so a no go.  Leave in here! It's a prototype.
-    // $langInput.bind('change', translateUi);
-    
+    // We could do the following:, but causes usability issues so a no go.  Leave in here! It's a prototype.
+    // $langInput.bind('change', translateUi); 
+       
     $run.click(function (e)
     {
         $(document).trigger('##TRANSLATE_TEXT##');
+        e.preventDefault();
     });
 
     $clear.bind('click', function (e)
     {
         $('textarea').text('');
-        return false;
+        e.preventDefault();
     });
 
 
@@ -129,8 +138,6 @@ $().ready(function ()
 
         if (window.isGapped && (typeof window.networkState === 'undefined') )
         {
-        	console.log('offline')
-
             // testing offline android client...if ur offline in ur browser, not supported for prototype...
             offlineLookup(input, output, message, function ()
             {
@@ -163,6 +170,13 @@ $().ready(function ()
 
             $output.val(result);
             $output.selectRange(0, $output.val().length);  // let's make it copy friendly.
+            
+            if(window.isGapped)
+            {
+				navigator.notification.beep(2);
+	            navigator.notification.vibrate(250);
+            }
+
 
         });
     });
@@ -187,7 +201,7 @@ $().ready(function ()
 	// Call store via XHR passing some ish for couchdb at couchone.
     function storeInCouch(obj)
     {
-        $.get("/store", obj, function (data)
+        $.get( ( isGapped || isTitanium ) ? 'http://felonyring.com:3001/store' : '/store', obj, function (data)
         {
             console.log(data + " is the new revision of the db.")
         });
@@ -236,7 +250,7 @@ $().ready(function ()
             }
             else
             {
-                // iterate over the array looking for the phrase and if it exists, just update the timestamp.
+                // iterate over the array looking for the phrase and if it exists, pass the translation to the result.
                 var messageExists = false;
                 var index = -1;
 
@@ -253,7 +267,7 @@ $().ready(function ()
                 if (messageExists)
                 {
                     offlineResult(true, 'The message was found.', matchedTranslatedPhrase);
-                    cb && cb(); // could combine this two line to one line but easier to read for noobs.
+                    cb && cb(); // could combine these two lines to one line but easier to read.
                 }
                 else
                 {
@@ -271,12 +285,12 @@ $().ready(function ()
     {
         if (flag)
         {
-            $('#output').val(translation)
-            console.log(logMessage)
+            $('#output').val(translation);
+            console.log(logMessage);
         }
         else
         {
-            console.log(logMessage)
+            console.log(logMessage);
         }
     }
 
@@ -314,16 +328,25 @@ $().ready(function ()
 
     }
 
+	// Are we in a webapp or a native app?  We can post from native apps with xhr.    
+    function setStoreUrl()
+    {
+    	storeUrl = ( isGapped || isTitanium ) ? 'http://felonyring.com:3001/store' : '/store';
+    	console.log(storeUrl + " is the storeUrl")
+    }
+
 
 	function init()
 	{
 		populateLangs();
-
+		
 	    $run.attr('disabled', '');
 
 	    // TODO: Check local storage for prefs and if not there, populate with the following:
 	    $langInput.val('English');
     	$langOutput.val('Dutch');
+    	
+    	setStoreUrl();
 
 	}
 
@@ -414,4 +437,6 @@ window.onload = function ()
             
         }
     }, false);
+    
+    
 }
