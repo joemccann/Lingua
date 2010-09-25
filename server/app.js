@@ -74,8 +74,8 @@ request(
         doc = JSON.parse(body);
         rev = doc._rev;
 
-        // Now kick off some YQL action to build up our database.
-        //yqlNyTimes();
+        // Now kick off some YQL action to build up our database. -> For presentation demo mainly.
+        yqlNyTimes();
 
 		// If we passed in an interval from the command line then, call it on that interval.
         yqlInterval && setInterval(yqlNyTimes, yqlInterval);

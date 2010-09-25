@@ -37,9 +37,7 @@ $().ready(function ()
     
     // derp
     var currentLang = 'English',
-        isGapped = false,
-        storeUrl = '',
-    	isTitanium = (typeof window.Titanium === 'object') ? true : false;
+     	isTitanium = (typeof window.Titanium === 'object') ? true : false;
 
     // just for less typing; premature optimization...whatever...    
     var $messageFrom = $('#messageFrom'),
@@ -174,10 +172,12 @@ $().ready(function ()
             
             if(isGapped)
             {
+            	// Notify natively in Phonegap app.
 				navigator.notification.beep(2);
 	            navigator.notification.vibrate(250);
             }
             
+            // Notify system notification on desktop app
             if(isTitanium) Titanium.Media.beep();
 
 
@@ -405,11 +405,11 @@ window.onload = function ()
 
     document.addEventListener('deviceready', function ()
     {
-        if ( !! (device.platform))
+        if ( !! (device.platform) )
         {
             // So we are on the Android device.
             isGapped = true;
-
+       
             // Let's load up the db from couch for quick access.
             $.ajax(
             {

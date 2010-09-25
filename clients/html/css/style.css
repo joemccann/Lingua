@@ -266,6 +266,7 @@ select{
 	.wrapper {
 		padding: 2% 1%;
 		width:98%;
+		min-height: 500px;
 	}
 
 	.mobile-anchor{
