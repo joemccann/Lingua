@@ -1,18 +1,19 @@
 // Feature Requests/TODO
 // 1 - Reset button if you decide to select away from English and to Dutch and then want to go back to English
-// 2 - Force continuous replication for couchdb on startup for Android client.
+// 2 - Force continuous replication for couchdb on startup for Android client ->  @janl, help me out yo!
 // 3 - check to see that the translation doesn't === the original phrase.
+// 4 - Add ability to make translated text full screen so you can show someone who speaks that language so it is easy to read.
 
-var languages;
 
-// somewhere, 3 baby kittens died.
-window.doc = '';
-window.isGapped = false;
-window.networkState = null;
+var languages,
+	doc = '',
+	isGapped = false,
+	networkState = null;
 
 $().ready(function ()
 {
 
+	// Capitalize the first letter of a string.
     $.capFirst = function (string)
     {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -58,7 +59,7 @@ $().ready(function ()
 
     $.data(document.body, "view", "home");
 
-	// Toggle copy and form in < 533px view.
+	// Toggle copy and form in < 533px wide view.
     $('#link-about').bind('click', function ()
     {
 
@@ -101,7 +102,7 @@ $().ready(function ()
     // Treat the H1 like a proper anchor tag...
     $h1.bind('click', function (e)
     {
-        window.location.reload(); // yes we could just make this an anchor tag, but it's a prototype AND won't work in android/titanium.
+        window.location.reload(); // yes we could just make this an anchor tag, but it's a prototype AND an anchor tag's path won't work in android/titanium.
         e.stopPropagation();
     });
 
@@ -136,7 +137,7 @@ $().ready(function ()
         $run.attr('disabled', 'disabled');
         $run.val('translating...');
 
-        if (window.isGapped && (typeof window.networkState === 'undefined') )
+        if (isGapped && (typeof networkState === 'undefined') )
         {
             // testing offline android client...if ur offline in ur browser, not supported for prototype...
             offlineLookup(input, output, message, function ()
@@ -171,16 +172,19 @@ $().ready(function ()
             $output.val(result);
             $output.selectRange(0, $output.val().length);  // let's make it copy friendly.
             
-            if(window.isGapped)
+            if(isGapped)
             {
 				navigator.notification.beep(2);
 	            navigator.notification.vibrate(250);
             }
+            
+            if(isTitanium) Titanium.Media.beep();
 
 
         });
     });
-
+    
+    
 	// Grab all languages and populate the options of the select elements.
 	function populateLangs()
 	{
@@ -201,17 +205,19 @@ $().ready(function ()
 	// Call store via XHR passing some ish for couchdb at couchone.
     function storeInCouch(obj)
     {
+    	// Express let's me handle this very easily...just set it up to handle the request and be done.
         $.get( ( isGapped || isTitanium ) ? 'http://felonyring.com:3001/store' : '/store', obj, function (data)
         {
             console.log(data + " is the new revision of the db.")
         });
     }
 
+	// do some shit when you are checking for offline access.
     function offlineLookup(from, to, message, cb)
     {
 
         // Yes this additional function is unnecessary, but I left it open incase there were other 
-        // sync-based functions to call here.
+        // sync-based functions to call here while developing the app.
         getOfflineCouch(from, to, message, function ()
         {
             // beep!
@@ -294,6 +300,14 @@ $().ready(function ()
         }
     }
 
+	// some shit for our desktop app.
+    function titaniumSpecific()
+    {
+    	document.body.className = 'titanium';
+    	$('#about p:not(:first)').remove();
+    }
+
+
     // translates the entire Ui in the language from drop down so the UI converts to that persons native languae.
     function translateUi()
     {
@@ -302,7 +316,7 @@ $().ready(function ()
         var input = $.data(document.body, "config").langFrom;
         var output = $('#langInput option:selected').val();
 
-        // Could definitely be optimized to not send so many requests, but fuck it for now.
+        // Could definitely be optimized to not send so many requests, but f it for now.
         $('label, input[type=button], option, textarea, p, a').each(function (i, el)
         {
             translate.text(
@@ -328,14 +342,6 @@ $().ready(function ()
 
     }
 
-	// Are we in a webapp or a native app?  We can post from native apps with xhr.    
-    function setStoreUrl()
-    {
-    	storeUrl = ( isGapped || isTitanium ) ? 'http://felonyring.com:3001/store' : '/store';
-    	console.log(storeUrl + " is the storeUrl")
-    }
-
-
 	function init()
 	{
 		populateLangs();
@@ -346,8 +352,8 @@ $().ready(function ()
 	    $langInput.val('English');
     	$langOutput.val('Dutch');
     	
-    	setStoreUrl();
-
+    	if(isTitanium) titaniumSpecific();
+    	
 	}
 
 
@@ -402,7 +408,7 @@ window.onload = function ()
         if ( !! (device.platform))
         {
             // So we are on the Android device.
-            window.isGapped = true;
+            isGapped = true;
 
             // Let's load up the db from couch for quick access.
             $.ajax(
@@ -430,7 +436,7 @@ window.onload = function ()
 
     			console.log('Connection type: ' + states[state]);
     			
-    			window.networkState = states[state];
+    			networkState = states[state];
 			}
 			
 			navigator.network.isReachable('google.com', reachableCallback);
