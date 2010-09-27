@@ -1,6 +1,0 @@
-[submodule "clients/html/js/translate.js"]
-	path = clients/html/js/translate.js
-	url = http://github.com/Marak/translate.js.git
-[submodule "clients/html/js/lawnchair"]
-	path = clients/html/js/lawnchair
-	url = http://github.com/brianleroux/lawnchair.git
