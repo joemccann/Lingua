@@ -11,7 +11,7 @@ Installation
 ---------------------
 Clone the repo, then:
 <pre>
-  sh node-deps  // Requires [npm](http://npmjs.org)
+  sh node-deps  		# Requires http://github.com/isaacs/npm
   cd Lingua/server
   node app.js
 </pre>
