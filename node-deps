@@ -1,0 +1,8 @@
+#! /bin/sh
+
+echo "\nGrabbing dependencies...\n"
+npm install express
+npm install connect
+npm install couchdb
+npm install request
+    
