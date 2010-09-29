@@ -2,12 +2,12 @@
 // 1 - Reset button if you decide to select away from English and to Dutch and then want to go back to English
 // 2 - Force continuous replication for couchdb on startup for Android client ->  @janl, help me out yo!
 // 3 - check to see that the translation doesn't === the original phrase.
-// 4 - Add ability to make translated text full screen so you can show someone who speaks that language so it is easy to read.
-
+// 4 - Add ability to make translated text full screen so you can show someone who speaks that language so it is easy to read on your mobile device.
 
 var languages,
 	doc = '',
 	isGapped = false,
+   	couchDbExists = false,
 	networkState = null;
 
 $().ready(function ()
@@ -20,7 +20,8 @@ $().ready(function ()
     }
     
     // http://stackoverflow.com/questions/499126/jquery-set-cursor-position-in-text-area
-    $.fn.selectRange = function(start, end) {
+    // yeah, wtf is this?  it's the same thing just so you know...
+    $['prototype' || 'fn'].selectRange = function(start, end) {
         return this.each(function() {
                 if(this.setSelectionRange) {
                         this.focus();
@@ -135,7 +136,7 @@ $().ready(function ()
         $run.attr('disabled', 'disabled');
         $run.val('translating...');
 
-        if (isGapped && (typeof networkState === 'undefined') )
+        if (isGapped && (typeof networkState === 'undefined') && couchDbExists )
         {
             // testing offline android client...if ur offline in ur browser, not supported for prototype...
             offlineLookup(input, output, message, function ()
@@ -200,7 +201,7 @@ $().ready(function ()
 	    }
 
 	}
-
+	
 
 	// Call store via XHR passing some ish for couchdb at couchone.
     function storeInCouch(obj)
@@ -411,6 +412,7 @@ window.onload = function ()
             isGapped = true;
        
             // Let's load up the db from couch for quick access.
+            // Also, REALLY weak way to check for Couch's existence.
             $.ajax(
             {
                 url: 'http://127.0.0.1:5984/lingua/lingua-couch',
@@ -418,6 +420,12 @@ window.onload = function ()
                 {
                     doc = JSON.parse(data);
                     data && console.log('Successfully snagged data from couchdb.');
+                    couchDbExists = true;
+                },
+                error: function(xhr, status)
+                {
+      				console.log("CouchDB response status: "+ status);
+                	console.log("Pretty sure CouchDB on Android isn't installed, but our test is super weak.");
                 }
             });
             
